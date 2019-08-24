@@ -42,9 +42,9 @@ class _AboutPageState extends State<AboutPage> {
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(middle: Text('關於')),
         child: SafeArea(
-            child: Center(
-                child: Scrollbar(
-          child: ConstrainedBox(
+            child: Scrollbar(
+          child: Center(
+              child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 640),
             child: BlocBuilder<DataBloc, DataBlocState>(
               bloc: bloc,
@@ -63,8 +63,8 @@ class _AboutPageState extends State<AboutPage> {
                 return CustomScrollView(slivers: slivers);
               },
             ),
-          ),
-        ))));
+          )),
+        )));
   }
 
   Widget makeVenue() {

@@ -28,6 +28,9 @@ class _MyAppState extends State<MyApp> {
       providers: [BlocProvider<DataBloc>(builder: (context) => bloc)],
       child: CupertinoApp(
         title: 'iPlayground 19',
+        theme: CupertinoThemeData(
+          primaryColor: Color.fromRGBO(80, 121, 255, 1.0),
+        ),
         home: MyHomePage(),
       ),
     );
@@ -46,17 +49,27 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
+//        border: Border.all(color: Colors.black),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_view_day),
+            icon: Icon(
+              Icons.schedule,
+              size: 24,
+            ),
             title: Text("第 1 天"),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_view_day),
+            icon: Icon(
+              Icons.schedule,
+              size: 24,
+            ),
             title: Text("第 2 天"),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.cake),
+            icon: Icon(
+              Icons.info,
+              size: 24,
+            ),
             title: Text("關於"),
           ),
         ],

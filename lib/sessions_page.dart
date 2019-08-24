@@ -157,7 +157,7 @@ class SessionCard extends StatelessWidget {
             top: false,
             bottom: false,
             child: Card(
-              elevation: 3,
+              elevation: 1,
               child: Material(
                 child: InkWell(
                   onTap: () {
