@@ -23,6 +23,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - images/co_aatp.png
+    - images/co_app_girls.png
+    - images/co_cocoaheads_tw.png
+    - images/co_ios_taipei.png
+    - images/co_swift_taipei.png
+    - images/logo.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
