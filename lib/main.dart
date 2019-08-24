@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iplayground19/sessions_page.dart';
 
+import 'about.dart';
 import 'data_bloc.dart';
 
 void main() => runApp(MyApp());
@@ -54,6 +55,10 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.calendar_view_day),
             title: Text("第 2 天"),
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.cake),
+            title: Text("關於"),
+          ),
         ],
       ),
       tabBuilder: (context, index) {
@@ -62,6 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
             return CupertinoTabView(builder: (context) => SessionsPage(day: 1));
           case 1:
             return CupertinoTabView(builder: (context) => SessionsPage(day: 2));
+          case 2:
+            return CupertinoTabView(builder: (context) => AboutPage());
+
           default:
             return CupertinoTabView(
                 builder: (context) =>

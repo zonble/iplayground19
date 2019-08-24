@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:html2md/html2md.dart' as html2md;
 import 'package:iplayground19/room_label.dart';
@@ -13,10 +14,10 @@ class ProgramPage extends StatefulWidget {
   ProgramPage({Key key, this.session}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => ProgramPageState();
+  State<StatefulWidget> createState() => _ProgramPageState();
 }
 
-class ProgramPageState extends State<ProgramPage> {
+class _ProgramPageState extends State<ProgramPage> {
   @override
   Widget build(BuildContext context) {
     var text = widget.session.description;
@@ -75,8 +76,14 @@ class ProgramPageState extends State<ProgramPage> {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(),
       child: SafeArea(
-        child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 640.0), child: body),
+        child: Scrollbar(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 640.0),
+              child: body,
+            ),
+          ),
+        ),
       ),
     );
   }
