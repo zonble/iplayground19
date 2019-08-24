@@ -30,6 +30,44 @@ flutter:
     - images/co_ios_taipei.png
     - images/co_swift_taipei.png
     - images/logo.png
+    - images/s_13.jpg
+    - images/s_alice.jpg
+    - images/s_allenlai.jpg
+    - images/s_annieli.jpg
+    - images/s_as.jpg
+    - images/s_bigroot.jpeg
+    - images/s_bobchang.jpg
+    - images/s_chung.png
+    - images/s_cindy.jpeg
+    - images/s_crystal.jpg
+    - images/s_dada.jpg
+    - images/s_dan.jpg
+    - images/s_dj.jpg
+    - images/s_gerry.png
+    - images/s_haolee.jpg
+    - images/s_hokila.jpg
+    - images/s_hy.png
+    - images/s_jefferywang.jpg
+    - images/s_jimmyliao.jpeg
+    - images/s_joechen.jpg
+    - images/s_johnnysung.jpg
+    - images/s_kennedy.png
+    - images/s_limyang.jpg
+    - images/s_lukewu.jpg
+    - images/s_mackliu.jpg
+    - images/s_markfly.png
+    - images/s_mike.jpeg
+    - images/s_oobe.png
+    - images/s_pofat.jpg
+    - images/s_roger.jpg
+    - images/s_stevensun.jpg
+    - images/s_superbil.png
+    - images/s_taihsin.jpg
+    - images/s_tank.jpg
+    - images/s_tobyhsu.jpg
+    - images/s_willchen.jpeg
+    - images/s_yf.png
+    - images/s_yoda.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
