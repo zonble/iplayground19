@@ -20,4 +20,18 @@ main() async {
       expect(program.speakers.isNotEmpty, isTrue);
     }
   });
+
+  test("Test Sessions", () async {
+    var sessions = await fetchSessions();
+    expect(sessions.isNotEmpty, isTrue);
+    for (Session session in sessions) {
+      expect(session.title.isNotEmpty, isTrue);
+      expect(session.description.isNotEmpty, isTrue);
+      expect(session.presenter.isNotEmpty, isTrue);
+      expect(session.startTime.isNotEmpty, isTrue);
+      expect(session.endTime.isNotEmpty, isTrue);
+      expect(session.sessionId != 0, isTrue);
+      expect(session.roomName.isNotEmpty, isTrue);
+    }
+  });
 }
