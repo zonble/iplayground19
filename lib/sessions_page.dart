@@ -2,53 +2,70 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iplayground19/api/src/session.dart';
+import 'package:iplayground19/program_page.dart';
+import 'package:iplayground19/room_label.dart';
 
 import 'data_bloc.dart';
 
-class SessionPage extends StatefulWidget {
+class SessionsPage extends StatefulWidget {
   final int day;
 
-  SessionPage({
+  SessionsPage({
     Key key,
     this.day,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SessionPageState();
+  State<StatefulWidget> createState() => _SessionsPageState();
 }
 
-class _SessionPageState extends State<SessionPage> {
+class _SessionsPageState extends State<SessionsPage> {
   @override
   Widget build(BuildContext context) {
     final DataBloc bloc = BlocProvider.of(context);
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text("第 ${widget.day} 天"),
+        middle: Text("第 ${widget.day} 天 - 09/2${widget.day}"),
       ),
       child: BlocBuilder<DataBloc, DataBlocState>(
         bloc: bloc,
         builder: (context, state) {
-          print(state);
           if (state is DataBlocLoadingState) {
-            return Container(
+            return SafeArea(
               child: Center(
-                child: CupertinoActivityIndicator(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('載入中，請稍候…'),
+                    SizedBox(height: 20),
+                    CupertinoActivityIndicator(),
+                  ],
+                ),
               ),
             );
           }
+
           if (state is DataBlocErrorState) {
-            return Container(
-              child: CupertinoButton(
-                child: Text('載入失敗'),
-                onPressed: () {
-                  bloc.dispatch(DataBlocEvent.load);
-                },
+            return SafeArea(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('載入時發生問題'),
+                    CupertinoButton(
+                      child: Text('重試'),
+                      onPressed: () {
+                        bloc.dispatch(DataBlocEvent.load);
+                      },
+                    ),
+                  ],
+                ),
               ),
             );
           }
+
           if (state is DataBlocLoadedState) {
             List<Section> day;
-            print(widget.day);
             if (widget.day == 1) {
               day = state.day1;
             } else if (widget.day == 2) {
@@ -71,7 +88,7 @@ class _SessionPageState extends State<SessionPage> {
                   ),
                 ));
                 for (final session in section.sessions) {
-                  var widget = new SessionCard(session: session);
+                  final widget = SessionCard(session: session);
                   items.add(widget);
                 }
                 return Column(
@@ -116,7 +133,11 @@ class SessionCard extends StatelessWidget {
           elevation: 3,
           child: Material(
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                final page = ProgramPage(session: session);
+                Navigator.of(context)
+                    .push(CupertinoPageRoute(builder: (context) => page));
+              },
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Container(
@@ -124,7 +145,7 @@ class SessionCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      new RoomLabel(session: session),
+                      RoomLabel(session: session),
                       SizedBox(height: 10),
                       Text(session.title,
                           style: Theme.of(context).textTheme.title),
@@ -142,43 +163,5 @@ class SessionCard extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class RoomLabel extends StatelessWidget {
-  const RoomLabel({
-    Key key,
-    @required this.session,
-  }) : super(key: key);
-
-  final Session session;
-
-  @override
-  Widget build(BuildContext context) {
-    Color color = () {
-      switch (session.roomName) {
-        case '101':
-          return Colors.red;
-        case '102':
-          return Colors.blue;
-        case '103':
-          return Colors.green;
-        case '201':
-          return Colors.orange;
-        default:
-          return Colors.black;
-      }
-    }();
-
-    return DecoratedBox(
-        decoration: BoxDecoration(border: Border.all(color: color)),
-        child: Padding(
-          padding: const EdgeInsets.all(3.0),
-          child: Text(session.roomName,
-              style: Theme.of(context).textTheme.caption.copyWith(
-                    color: color,
-                    fontWeight: FontWeight.bold,
-                  )),
-        ));
   }
 }
