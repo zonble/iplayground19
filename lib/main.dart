@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iplayground19/favorites_page.dart';
 import 'package:iplayground19/sessions_page.dart';
 
 import 'package:iplayground19/about.dart';
@@ -74,6 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text("第 2 天"),
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.favorite, size: 24),
+            title: Text("我的最愛"),
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.info, size: 24),
             title: Text("關於"),
           ),
@@ -86,6 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
           case 1:
             return CupertinoTabView(builder: (context) => SessionsPage(day: 2));
           case 2:
+            return CupertinoTabView(builder: (context) => FavoritePage());
+          case 3:
             return CupertinoTabView(builder: (context) => AboutPage());
 
           default:

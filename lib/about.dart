@@ -41,8 +41,7 @@ class _AboutPageState extends State<AboutPage> {
     DataBloc bloc = BlocProvider.of(context);
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(middle: Text('關於')),
-        child: SafeArea(
-            child: Scrollbar(
+        child: Scrollbar(
           child: Center(
               child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 640),
@@ -50,6 +49,9 @@ class _AboutPageState extends State<AboutPage> {
               bloc: bloc,
               builder: (context, state) {
                 var slivers = <Widget>[];
+                slivers.add(SliverToBoxAdapter(
+                    child:
+                        SizedBox(height: MediaQuery.of(context).padding.top)));
                 slivers
                     .addAll([logo, venueSection, aboutSection, sponsorTitle]);
                 slivers.addAll(makeSponsorGrid(state));
@@ -58,13 +60,15 @@ class _AboutPageState extends State<AboutPage> {
                   coGrid,
                   staffTitle,
                   staffGrid,
-                  SliverToBoxAdapter(child: Container(height: 60.0))
+                  SliverToBoxAdapter(
+                      child:
+                          SizedBox(height: MediaQuery.of(context).padding.top)),
                 ]);
                 return CustomScrollView(slivers: slivers);
               },
             ),
           )),
-        )));
+        ));
   }
 
   Widget makeAboutUs() {

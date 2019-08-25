@@ -15,11 +15,14 @@ class SessionCard extends StatelessWidget {
   /// [Program] used in the card.
   final Program program;
 
+  final bool showDetails;
+
   /// Creates a new instance with [session] and [program].
   const SessionCard({
     Key key,
     @required this.session,
     @required this.program,
+    this.showDetails = false,
   }) : super(key: key);
 
   @override
@@ -69,6 +72,12 @@ class SessionCard extends StatelessWidget {
                       SizedBox(height: 5),
                       Text(session.presenter, style: TextStyle(fontSize: 17.0)),
                       SizedBox(height: 20),
+                      showDetails
+                          ? Text('第 ${session.conferenceDay} 天')
+                          : Container(),
+                      showDetails
+                          ? Text('開始時間 ' + session.startTime)
+                          : Container(),
                       Text('結束時間 ' + session.endTime,
                           style: Theme.of(context).textTheme.body1),
                     ],

@@ -93,12 +93,18 @@ class _SessionsPageState extends State<SessionsPage> {
                     children: items);
               }, childCount: day.length),
             );
-            widgets.add(list);
+            widgets.addAll([
+              SliverToBoxAdapter(
+                  child: SizedBox(height: MediaQuery.of(context).padding.top)),
+              list,
+              SliverToBoxAdapter(child: SizedBox(height: 30)),
+              SliverToBoxAdapter(
+                  child:
+                      SizedBox(height: MediaQuery.of(context).padding.bottom)),
+            ]);
             return Scaffold(
-              body: SafeArea(
-                child: Scrollbar(
-                  child: CustomScrollView(slivers: widgets),
-                ),
+              body: Scrollbar(
+                child: CustomScrollView(slivers: widgets),
               ),
             );
           }

@@ -60,12 +60,18 @@ class _SessionPageState extends State<SessionPage> {
       text = html2md.convert(text);
     }
     NotificationBloc bloc = BlocProvider.of(context);
+
     var widgets = <Widget>[
+      SizedBox(height: MediaQuery.of(context).padding.top),
+      SizedBox(height: MediaQuery.of(context).padding.top),
       SizedBox(height: 20),
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(children: <Widget>[RoomLabel(session: widget.session)]),
       ),
+    ];
+
+    final title = [
       Padding(
         padding: const EdgeInsets.all(10.0),
         child: Row(
@@ -91,6 +97,9 @@ class _SessionPageState extends State<SessionPage> {
           ],
         ),
       ),
+      SizedBox(height: 20),
+    ];
+    final main = [
       SizedBox(height: 5),
       Padding(
         padding: const EdgeInsets.only(left: 10.0, right: 10.0),
@@ -118,6 +127,19 @@ class _SessionPageState extends State<SessionPage> {
       ),
       SizedBox(height: 30),
     ];
+
+    widgets.addAll(title);
+
+    if (widget.program.reviewTags.isNotEmpty) {
+      var textSpans =
+          widget.program.reviewTags.map((x) => TextSpan(text: x)).toList();
+      widgets.add(Padding(
+        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+        child: Text.rich(TextSpan(children: textSpans)),
+      ));
+    }
+
+    widgets.addAll(main);
 
     if (widget.program != null) {
       widgets.add(Padding(
@@ -147,21 +169,22 @@ class _SessionPageState extends State<SessionPage> {
       }
     }
     widgets.add(SizedBox(height: 50));
+    widgets.add(SizedBox(height: MediaQuery.of(context).padding.bottom));
 
     var body = CustomScrollView(
-      slivers: [SliverList(delegate: SliverChildListDelegate(widgets))],
+      slivers: [
+        SliverList(delegate: SliverChildListDelegate(widgets)),
+      ],
     );
 
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(),
       child: Scaffold(
-        body: SafeArea(
-          child: Scrollbar(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 640.0),
-                child: body,
-              ),
+        body: Scrollbar(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 640.0),
+              child: body,
             ),
           ),
         ),

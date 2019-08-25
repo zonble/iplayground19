@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-class Session {
+class Session implements Comparable<Session> {
   int conferenceDay;
   String startTime;
   String endTime;
@@ -25,6 +25,20 @@ class Session {
     roomName = map['room_name'];
     trackName = map['track_name'];
     description = map['desc'];
+  }
+
+  int compareTo(Session session) {
+    if (this.sessionId == session.sessionId) {
+      return 0;
+    }
+    if (this.conferenceDay < session.conferenceDay) {
+      return -1;
+    } else if (this.conferenceDay > session.conferenceDay) {
+      return 1;
+    }
+    var result = this.startTime.compareTo(session.startTime);
+    if (result != 0) return result;
+    return this.roomName.compareTo(session.roomName);
   }
 }
 
