@@ -118,10 +118,10 @@ class _SessionPageState extends State<SessionPage> {
       slivers: [SliverList(delegate: SliverChildListDelegate(widgets))],
     );
 
-    return Scaffold(
-      body: CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(),
-        child: SafeArea(
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(),
+      child: Scaffold(
+        body: SafeArea(
           child: Scrollbar(
             child: Center(
               child: ConstrainedBox(
