@@ -36,6 +36,8 @@ class FavoriteButton extends StatelessWidget {
                 onPressed: () {
                   bloc.dispatch(
                       NotificationBlocAddEvent("${session.sessionId}"));
+                  final bar = SnackBar(content: Text('我們會在議程開始前通知您！'));
+                  Scaffold.of(context).showSnackBar(bar);
                 },
               );
             }
