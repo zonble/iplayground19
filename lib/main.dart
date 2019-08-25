@@ -6,6 +6,8 @@ import 'package:iplayground19/sessions_page.dart';
 import 'package:iplayground19/about.dart';
 import 'package:iplayground19/bloc/data_bloc.dart';
 
+import 'bloc/notification.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -14,18 +16,31 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  var bloc = DataBloc();
+  DataBloc dataBloc;
+  NotificationBloc notificationBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    dataBloc = DataBloc();
+    notificationBloc = NotificationBloc();
+    notificationBloc.dispatch(NotificationBlocLoadEvent());
+  }
 
   @override
   void dispose() {
+    dataBloc.dispose();
+    notificationBloc.dispose();
     super.dispose();
-    bloc.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider<DataBloc>(builder: (context) => bloc)],
+      providers: [
+        BlocProvider<DataBloc>(builder: (context) => dataBloc),
+        BlocProvider<NotificationBloc>(builder: (context) => notificationBloc),
+      ],
       child: CupertinoApp(
         title: 'iPlayground 19',
         theme: CupertinoThemeData(

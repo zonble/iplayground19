@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'api/api.dart';
+import 'package:iplayground19/api/api.dart';
 
 class RoomLabel extends StatelessWidget {
   final Session session;

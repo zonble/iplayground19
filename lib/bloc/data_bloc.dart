@@ -12,12 +12,14 @@ class DataBlocLoadingState extends DataBlocState {}
 
 class DataBlocLoadedState extends DataBlocState {
   Sponsors sponsors;
+  Map<String, Session> sessions;
   Map<String, Program> programs;
   List<Section> day1;
   List<Section> day2;
 
   DataBlocLoadedState({
     @required this.sponsors,
+    @required this.sessions,
     @required this.programs,
     @required this.day1,
     @required this.day2,
@@ -59,13 +61,15 @@ class DataBloc extends Bloc<DataBlocEvent, DataBlocState> {
       final sponsors = await fetchSponsors();
       final programs = await fetchPrograms();
       final sessions = await fetchSessions();
+      Map<String, Session> sessionMap = reshapeSessions(sessions);
       Map<String, Program> programMap = reshapePrograms(programs);
-      List<List<Section>> days = reshapeSessions(sessions);
+      List<List<Section>> days = reshapeSessionsToDays(sessions);
       yield DataBlocLoadedState(
         day1: days[0],
         day2: days[1],
         sponsors: sponsors,
         programs: programMap,
+        sessions: sessionMap,
       );
     } catch (e) {
       yield DataBlocErrorState(e);
@@ -87,7 +91,7 @@ class DataBloc extends Bloc<DataBlocEvent, DataBlocState> {
     return sections;
   }
 
-  List<List<Section>> reshapeSessions(List<Session> sessions) {
+  List<List<Section>> reshapeSessionsToDays(List<Session> sessions) {
     var day1Map = Map<String, List<Session>>();
     var day2Map = Map<String, List<Session>>();
 
@@ -116,6 +120,14 @@ class DataBloc extends Bloc<DataBlocEvent, DataBlocState> {
       convert(day1Map),
       convert(day2Map),
     ];
+  }
+
+  Map<String, Session> reshapeSessions(List<Session> list) {
+    var map = Map<String, Session>();
+    for (var session in list) {
+      map["${session.sessionId}"] = session;
+    }
+    return map;
   }
 
   Map<String, Program> reshapePrograms(List<Program> list) {

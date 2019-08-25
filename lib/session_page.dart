@@ -2,10 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:html2md/html2md.dart' as html2md;
 import 'package:iplayground19/api/api.dart';
-import 'package:iplayground19/room_label.dart';
+import 'package:iplayground19/bloc/notification.dart';
+import 'package:iplayground19/components/favorite_Button.dart';
+import 'package:iplayground19/components/room_label.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OurMarkdown extends MarkdownWidget {
@@ -35,22 +38,23 @@ class OurMarkdown extends MarkdownWidget {
   }
 }
 
-class ProgramPage extends StatefulWidget {
+class SessionPage extends StatefulWidget {
   final Session session;
 
-  ProgramPage({Key key, this.session}) : super(key: key);
+  SessionPage({Key key, this.session}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ProgramPageState();
+  State<StatefulWidget> createState() => _SessionPageState();
 }
 
-class _ProgramPageState extends State<ProgramPage> {
+class _SessionPageState extends State<SessionPage> {
   @override
   Widget build(BuildContext context) {
     var text = widget.session.description;
     if (text.contains('<p>') || text.contains('<h4>')) {
       text = html2md.convert(text);
     }
+    NotificationBloc bloc = BlocProvider.of(context);
     var widgets = <Widget>[
       SizedBox(height: 20),
       Padding(
@@ -59,13 +63,27 @@ class _ProgramPageState extends State<ProgramPage> {
       ),
       Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Text(
-          widget.session.title,
-          locale: Locale('zh', 'TW'),
-          style: TextStyle(
-            fontSize: 30.0,
-            fontWeight: FontWeight.bold,
-          ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Expanded(
+              child: Text(
+                widget.session.title,
+                locale: Locale('zh', 'TW'),
+                style: TextStyle(
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            SizedBox(width: 10),
+            ClipOval(
+              child: Material(
+                  child: InkWell(
+                      child:
+                          FavoriteButton(bloc: bloc, session: widget.session))),
+            ),
+          ],
         ),
       ),
       SizedBox(height: 5),
