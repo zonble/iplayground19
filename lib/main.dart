@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     dataBloc = DataBloc();
-    notificationBloc = NotificationBloc();
+    notificationBloc = NotificationBloc(dataBloc: dataBloc);
     notificationBloc.dispatch(NotificationBlocLoadEvent());
   }
 
@@ -64,27 +64,17 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
-//        border: Border.all(color: Colors.black),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.schedule,
-              size: 24,
-            ),
+            icon: Icon(Icons.schedule, size: 24),
             title: Text("第 1 天"),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.schedule,
-              size: 24,
-            ),
+            icon: Icon(Icons.schedule, size: 24),
             title: Text("第 2 天"),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.info,
-              size: 24,
-            ),
+            icon: Icon(Icons.info, size: 24),
             title: Text("關於"),
           ),
         ],

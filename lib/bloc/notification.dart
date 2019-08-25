@@ -1,5 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:iplayground19/api/api.dart';
+import 'package:iplayground19/bloc/data_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationBlocEvent {}
 
@@ -37,12 +40,40 @@ class NotificationBlocLoadedState extends NotificationBlocState {
 
 class NotificationBloc
     extends Bloc<NotificationBlocEvent, NotificationBlocState> {
+  DataBloc dataBloc;
+  NotificationHelper helper;
+
+  NotificationBloc({this.dataBloc});
+
   @override
   NotificationBlocState get initialState => NotificationBlocInitialState();
 
   Future<List<String>> _loadSessions() async {
     final instance = await SharedPreferences.getInstance();
     return instance.getStringList("notifications") ?? <String>[];
+  }
+
+  Future<void> _scheduleNotifications() async {
+    if (dataBloc == null) {
+      return;
+    }
+    final dataState = dataBloc.currentState;
+    final notificationState = this.currentState;
+    if (dataState is DataBlocLoadedState &&
+        notificationState is NotificationBlocLoadedState) {
+      if (helper == null) {
+        helper = NotificationHelper();
+      }
+      helper.cancelAll();
+
+      final sessions = dataState.sessions;
+      final savedSessions = notificationState.sessions;
+      for (final sessionId in savedSessions) {
+        final session = sessions[sessionId];
+        if (session == null) continue;
+        helper.scheduleNotification(session);
+      }
+    }
   }
 
   Future<void> _saveSessions() async {
@@ -71,17 +102,82 @@ class NotificationBloc
     if (event is NotificationBlocAddEvent) {
       var sessions = await _getSessions();
       sessions.add(event.sessionId);
-      _saveSessions();
       final state = NotificationBlocLoadedState(sessions);
       yield state;
+      await _saveSessions();
+      await _scheduleNotifications();
     }
 
     if (event is NotificationBlocRemoveEvent) {
       var sessions = await _getSessions();
       sessions.remove(event.sessionId);
-      _saveSessions();
       final state = NotificationBlocLoadedState(sessions);
       yield state;
+      await _saveSessions();
+      await _scheduleNotifications();
     }
+  }
+}
+
+class NotificationHelper {
+  FlutterLocalNotificationsPlugin _plugin;
+
+  NotificationHelper() {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('ic_launcher');
+    var initializationSettingsIOS = new IOSInitializationSettings(
+        onDidReceiveLocalNotification:
+            (int id, String title, String body, String payload) {
+      return null;
+    });
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: (payload) {
+      return null;
+    });
+    _plugin = flutterLocalNotificationsPlugin;
+  }
+
+  static DateTime getSessionTime(Session session) {
+    final day = session.conferenceDay;
+    final startTime = session.startTime;
+    final components = startTime.split(":");
+    final hour = int.parse(components[0]);
+    final minute = int.parse(components[1]);
+
+    DateTime dateTime = DateTime.utc(2019, 9, 20 + day, hour, minute);
+    // Taiwan is at UTC + 8
+    DateTime taiwanTime = dateTime.add(Duration(hours: 8));
+    return taiwanTime.subtract(Duration(minutes: 10));
+  }
+
+  void cancelAll() {
+    _plugin.cancelAll();
+  }
+
+  void scheduleNotification(Session session) async {
+    var scheduledNotificationDateTime = getSessionTime(session);
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+      'notifications',
+      'Notifications',
+      'Notifications from iPlayground',
+    );
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    NotificationDetails platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+
+    var title = session.title;
+    var body = "議程將在 ${session.startTime} 於 ${session.roomName} 開始";
+
+    await _plugin.schedule(
+      0,
+      title,
+      body,
+      scheduledNotificationDateTime,
+      platformChannelSpecifics,
+    );
   }
 }
