@@ -79,7 +79,12 @@ class _SessionsPageState extends State<SessionsPage> {
                 var items = <Widget>[];
                 items.add(TimeSectionLabel(section: section));
                 for (final session in section.sessions) {
-                  final widget = SessionCard(session: session);
+                  final id = session.proposalId.substring(5);
+                  final program = state.programs[id];
+                  final widget = SessionCard(
+                    session: session,
+                    program: program,
+                  );
                   items.add(widget);
                 }
                 return Column(

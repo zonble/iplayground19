@@ -3,18 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iplayground19/api/api.dart';
 import 'package:iplayground19/bloc/notification.dart';
-import 'package:iplayground19/session_page.dart';
-import 'package:iplayground19/components/room_label.dart';
-
 import 'package:iplayground19/components/favorite_Button.dart';
+import 'package:iplayground19/components/room_label.dart';
+import 'package:iplayground19/session_page.dart';
 
+/// Represents a session in a list.
 class SessionCard extends StatelessWidget {
+  /// [Session] used in the card.
+  final Session session;
+
+  /// [Program] used in the card.
+  final Program program;
+
+  /// Creates a new instance with [session] and [program].
   const SessionCard({
     Key key,
     @required this.session,
+    @required this.program,
   }) : super(key: key);
-
-  final Session session;
 
   @override
   Widget build(BuildContext context) => Center(
@@ -27,19 +33,22 @@ class SessionCard extends StatelessWidget {
               bottom: false,
               child: Card(
                 elevation: 1,
-                child: buildInner(context),
+                child: _buildInner(context),
               ),
             ),
           ),
         ),
       );
 
-  Widget buildInner(BuildContext context) {
+  Widget _buildInner(BuildContext context) {
     NotificationBloc bloc = BlocProvider.of(context);
     return Material(
       child: InkWell(
         onTap: () {
-          final page = SessionPage(session: session);
+          final page = SessionPage(
+            session: session,
+            program: program,
+          );
           Navigator.of(context)
               .push(CupertinoPageRoute(builder: (context) => page));
         },

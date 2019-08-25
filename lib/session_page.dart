@@ -40,8 +40,13 @@ class OurMarkdown extends MarkdownWidget {
 
 class SessionPage extends StatefulWidget {
   final Session session;
+  final Program program;
 
-  SessionPage({Key key, this.session}) : super(key: key);
+  SessionPage({
+    Key key,
+    this.session,
+    this.program,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SessionPageState();
@@ -113,6 +118,35 @@ class _SessionPageState extends State<SessionPage> {
       ),
       SizedBox(height: 30),
     ];
+
+    if (widget.program != null) {
+      widgets.add(Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: Text("關於講者", style: TextStyle(fontSize: 20))));
+      widgets.add(Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: Divider(color: Colors.grey)));
+
+      for (final speaker in widget.program.speakers) {
+        widgets.addAll([
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              speaker.name,
+              style: Theme.of(context).textTheme.title,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: OurMarkdown(
+              data: speaker.biography,
+              onTapLink: (link) => launch(link),
+            ),
+          )
+        ]);
+      }
+    }
+    widgets.add(SizedBox(height: 50));
 
     var body = CustomScrollView(
       slivers: [SliverList(delegate: SliverChildListDelegate(widgets))],
