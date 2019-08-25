@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iplayground19/api/api.dart';
 import 'package:iplayground19/api/src/sponsor.dart';
+import 'package:iplayground19/bloc/data_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'api/api.dart';
-import 'data_bloc.dart';
 
 class AboutPage extends StatefulWidget {
   @override
@@ -22,19 +21,19 @@ class _AboutPageState extends State<AboutPage> {
         padding: const EdgeInsets.only(left: 10, right: 10),
         sliver: SliverList(
             delegate: SliverChildListDelegate(
-                [AboutSectionTitle(text: 'Sponsors 贊助')])));
+                [_AboutSectionTitle(text: 'Sponsors 贊助')])));
     final coTitle = SliverPadding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         sliver: SliverList(
             delegate: SliverChildListDelegate(
-                [AboutSectionTitle(text: 'Co-organizers 合作夥伴')])));
+                [_AboutSectionTitle(text: 'Co-organizers 合作夥伴')])));
     final coGrid = makeCoOrganizersGrid();
 
     final staffTitle = SliverPadding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         sliver: SliverList(
             delegate: SliverChildListDelegate(
-                [AboutSectionTitle(text: 'Staffs 工作人員')])));
+                [_AboutSectionTitle(text: 'Staffs 工作人員')])));
     final staffGrid = makeStaffGrid();
 
     // --
@@ -68,32 +67,9 @@ class _AboutPageState extends State<AboutPage> {
         )));
   }
 
-  Widget makeVenue() {
-    final venueWidgets = <Widget>[
-      AboutSectionTitle(text: 'Venue 場地'),
-      Row(
-        children: <Widget>[
-          Text('國立臺灣大學博雅教學館'),
-          CupertinoButton(
-            child: Text('在地圖中開啟'),
-            onPressed: () {
-              var url = 'https://tinyurl.com/y4h9ja9y';
-              launch(url);
-            },
-          )
-        ],
-      ),
-    ];
-    final venueSection =
-        SliverList(delegate: SliverChildListDelegate(venueWidgets));
-    return SliverPadding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        sliver: venueSection);
-  }
-
   Widget makeAboutUs() {
     final aboutWidgets = <Widget>[
-      AboutSectionTitle(text: 'About 關於我們'),
+      _AboutSectionTitle(text: 'About 關於我們'),
       Text(
           '2017年9月，一群到東京參加 iOSDC 的工程師們，在看到國外蓬勃活躍的程式力，熱血自此被點燃，決心舉辦一場兼具廣深度又有趣的 iOS 研討會。'),
       SizedBox(height: 5),
@@ -106,6 +82,37 @@ class _AboutPageState extends State<AboutPage> {
     return SliverPadding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         sliver: aboutSection);
+  }
+
+  makeCoOrganizersGrid() {
+    final data = coOrganizerData();
+    return SliverPadding(
+      padding: const EdgeInsets.only(left: 10, right: 10),
+      sliver: SliverGrid(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final item = data[index];
+          return LayoutBuilder(builder: (context, constraints) {
+            return Container(
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => launch(item[1]),
+                  child: Container(),
+                ),
+              ),
+              width: constraints.maxWidth,
+              height: constraints.maxHeight,
+              decoration: BoxDecoration(
+                  image: DecorationImage(image: AssetImage(item[0]))),
+            );
+          });
+        }, childCount: data.length),
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 200.0,
+          crossAxisSpacing: 10.0,
+        ),
+      ),
+    );
   }
 
   List<Widget> makeSponsorGrid(DataBlocState state) {
@@ -126,14 +133,14 @@ class _AboutPageState extends State<AboutPage> {
 
     if (state is DataBlocLoadedState) {
       return <Widget>[
-        SliverToBoxAdapter(child: SponsorTitle(text: '鑽石贊助')),
-        SponsorGrid(sponsors: state.sponsors.diamond),
-        SliverToBoxAdapter(child: SponsorTitle(text: '黃金贊助')),
-        SponsorGrid(sponsors: state.sponsors.gold),
-        SliverToBoxAdapter(child: SponsorTitle(text: '白銀贊助')),
-        SponsorGrid(sponsors: state.sponsors.silver),
-        SliverToBoxAdapter(child: SponsorTitle(text: '青銅贊助')),
-        SponsorGrid(sponsors: state.sponsors.bronze),
+        SliverToBoxAdapter(child: _SponsorTitle(text: '鑽石贊助')),
+        _SponsorGrid(sponsors: state.sponsors.diamond),
+        SliverToBoxAdapter(child: _SponsorTitle(text: '黃金贊助')),
+        _SponsorGrid(sponsors: state.sponsors.gold),
+        SliverToBoxAdapter(child: _SponsorTitle(text: '白銀贊助')),
+        _SponsorGrid(sponsors: state.sponsors.silver),
+        SliverToBoxAdapter(child: _SponsorTitle(text: '青銅贊助')),
+        _SponsorGrid(sponsors: state.sponsors.bronze),
       ].map((sliver) {
         return SliverPadding(
           padding: const EdgeInsets.only(left: 10, right: 10),
@@ -194,58 +201,57 @@ class _AboutPageState extends State<AboutPage> {
     );
   }
 
-  makeCoOrganizersGrid() {
-    final data = coOrganizerData();
+  Widget makeVenue() {
+    final venueWidgets = <Widget>[
+      _AboutSectionTitle(text: 'Venue 場地'),
+      Row(
+        children: <Widget>[
+          Text('國立臺灣大學博雅教學館'),
+          CupertinoButton(
+            child: Text('在地圖中開啟'),
+            onPressed: () {
+              var url = 'https://tinyurl.com/y4h9ja9y';
+              launch(url);
+            },
+          )
+        ],
+      ),
+    ];
+    final venueSection =
+        SliverList(delegate: SliverChildListDelegate(venueWidgets));
     return SliverPadding(
-      padding: const EdgeInsets.only(left: 10, right: 10),
-      sliver: SliverGrid(
-        delegate: SliverChildBuilderDelegate((context, index) {
-          final item = data[index];
-          return LayoutBuilder(builder: (context, constraints) {
-            return Container(
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => launch(item[1]),
-                  child: Container(),
-                ),
-              ),
-              width: constraints.maxWidth,
-              height: constraints.maxHeight,
-              decoration: BoxDecoration(
-                  image: DecorationImage(image: AssetImage(item[0]))),
-            );
-          });
-        }, childCount: data.length),
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 200.0,
-          crossAxisSpacing: 10.0,
-        ),
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        sliver: venueSection);
+  }
+}
+
+class _AboutSectionTitle extends StatelessWidget {
+  final String text;
+
+  const _AboutSectionTitle({Key key, this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 30.0, bottom: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(text, style: Theme.of(context).textTheme.display1),
+          Divider(color: Colors.grey),
+        ],
       ),
     );
   }
 }
 
-class SponsorTitle extends StatelessWidget {
-  const SponsorTitle({
-    Key key,
-    @required this.text,
-  }) : super(key: key);
-  final String text;
+class _SponsorGrid extends StatelessWidget {
+  final List<Sponsor> sponsors;
 
-  @override
-  Widget build(BuildContext context) {
-    return Text(text, style: Theme.of(context).textTheme.title);
-  }
-}
-
-class SponsorGrid extends StatelessWidget {
-  const SponsorGrid({
+  const _SponsorGrid({
     Key key,
     @required this.sponsors,
   }) : super(key: key);
-
-  final List<Sponsor> sponsors;
 
   @override
   Widget build(BuildContext context) {
@@ -279,22 +285,16 @@ class SponsorGrid extends StatelessWidget {
   }
 }
 
-class AboutSectionTitle extends StatelessWidget {
+class _SponsorTitle extends StatelessWidget {
   final String text;
 
-  const AboutSectionTitle({Key key, this.text}) : super(key: key);
+  const _SponsorTitle({
+    Key key,
+    @required this.text,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 30.0, bottom: 10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(text, style: Theme.of(context).textTheme.display1),
-          Divider(color: Colors.grey),
-        ],
-      ),
-    );
+    return Text(text, style: Theme.of(context).textTheme.title);
   }
 }

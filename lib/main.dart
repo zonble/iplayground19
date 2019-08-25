@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iplayground19/sessions_page.dart';
 
-import 'about.dart';
-import 'data_bloc.dart';
+import 'package:iplayground19/about.dart';
+import 'package:iplayground19/bloc/data_bloc.dart';
 
 void main() => runApp(MyApp());
 

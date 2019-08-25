@@ -4,9 +4,36 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:html2md/html2md.dart' as html2md;
+import 'package:iplayground19/api/api.dart';
 import 'package:iplayground19/room_label.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'api/api.dart';
+
+class OurMarkdown extends MarkdownWidget {
+  final EdgeInsets padding;
+
+  /// Creates a scrolling widget that parses and displays Markdown.
+  const OurMarkdown({
+    Key key,
+    String data,
+    MarkdownStyleSheet styleSheet,
+    SyntaxHighlighter syntaxHighlighter,
+    MarkdownTapLinkCallback onTapLink,
+    Directory imageDirectory,
+    this.padding: const EdgeInsets.all(16.0),
+  }) : super(
+          key: key,
+          data: data,
+          styleSheet: styleSheet,
+          syntaxHighlighter: syntaxHighlighter,
+          onTapLink: onTapLink,
+          imageDirectory: imageDirectory,
+        );
+
+  @override
+  Widget build(BuildContext context, List<Widget> children) {
+    return Column(children: children);
+  }
+}
 
 class ProgramPage extends StatefulWidget {
   final Session session;
@@ -86,32 +113,5 @@ class _ProgramPageState extends State<ProgramPage> {
         ),
       ),
     );
-  }
-}
-
-class OurMarkdown extends MarkdownWidget {
-  /// Creates a scrolling widget that parses and displays Markdown.
-  const OurMarkdown({
-    Key key,
-    String data,
-    MarkdownStyleSheet styleSheet,
-    SyntaxHighlighter syntaxHighlighter,
-    MarkdownTapLinkCallback onTapLink,
-    Directory imageDirectory,
-    this.padding: const EdgeInsets.all(16.0),
-  }) : super(
-          key: key,
-          data: data,
-          styleSheet: styleSheet,
-          syntaxHighlighter: syntaxHighlighter,
-          onTapLink: onTapLink,
-          imageDirectory: imageDirectory,
-        );
-
-  final EdgeInsets padding;
-
-  @override
-  Widget build(BuildContext context, List<Widget> children) {
-    return Column(children: children);
   }
 }

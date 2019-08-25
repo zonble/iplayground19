@@ -5,7 +5,7 @@ import 'package:iplayground19/api/src/session.dart';
 import 'package:iplayground19/program_page.dart';
 import 'package:iplayground19/room_label.dart';
 
-import 'data_bloc.dart';
+import 'package:iplayground19/bloc/data_bloc.dart';
 
 class SessionsPage extends StatefulWidget {
   final int day;

@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'api/api.dart';
 
 class RoomLabel extends StatelessWidget {
+  final Session session;
+
   const RoomLabel({
     Key key,
     @required this.session,
   }) : super(key: key);
-
-  final Session session;
 
   @override
   Widget build(BuildContext context) {
