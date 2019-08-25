@@ -1,0 +1,22 @@
+List<List<String>> coOrganizerData() => [
+      [
+        'images/co_aatp.png',
+        'https://aatp.com.tw',
+      ],
+      [
+        'images/co_cocoaheads_tw.png',
+        'https://www.facebook.com/groups/cocoaheads.taipei/'
+      ],
+      [
+        'images/co_ios_taipei.png',
+        'https://www.facebook.com/groups/ios.taipei/',
+      ],
+      [
+        'images/co_swift_taipei.png',
+        'https://www.meetup.com/Swift-Taipei-User-Group/',
+      ],
+      [
+        'images/co_app_girls.png',
+        'https://www.facebook.com/groups/1260405513988915/',
+      ],
+    ];

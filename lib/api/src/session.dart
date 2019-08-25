@@ -30,7 +30,7 @@ class Session {
 
 Future<List<Session>> fetchSessions() async {
   final response = await http.get(
-      'https://raw.githubusercontent.com/zonble/iplayground19/master/data/sessions.json');
+      'https://raw.githubusercontent.com/iplayground/2019app/master/data/sessions.json');
   final map = json.decode(response.body);
   List list = map['sessions'];
   return List.from(list.cast<Map>().map((x) => (Session(x))));

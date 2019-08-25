@@ -39,7 +39,7 @@ class Program {
 
 Future<List<Program>> fetchPrograms() async {
   final response = await http.get(
-      'https://raw.githubusercontent.com/zonble/iplayground19/master/data/program.json');
+      'https://raw.githubusercontent.com/iplayground/2019app/master/data/program.json');
   final map = json.decode(response.body);
   List list = map['program'];
   return List.from(list.cast<Map>().map((x) => (Program(x))));

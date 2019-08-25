@@ -108,7 +108,6 @@ class OurMarkdown extends MarkdownWidget {
           imageDirectory: imageDirectory,
         );
 
-  /// The amount of space by which to inset the children.
   final EdgeInsets padding;
 
   @override
