@@ -22,7 +22,7 @@ class OurMarkdown extends MarkdownWidget {
     SyntaxHighlighter syntaxHighlighter,
     MarkdownTapLinkCallback onTapLink,
     Directory imageDirectory,
-    this.padding: const EdgeInsets.all(16.0),
+    this.padding: const EdgeInsets.all(16),
   }) : super(
           key: key,
           data: data,
@@ -66,14 +66,15 @@ class _SessionPageState extends State<SessionPage> {
       SizedBox(height: MediaQuery.of(context).padding.top),
       SizedBox(height: 20),
       Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding:
+            const EdgeInsets.only(left: 20, top: 8, bottom: 8.0, right: 8.0),
         child: Row(children: <Widget>[RoomLabel(session: widget.session)]),
       ),
     ];
 
     final title = [
       Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(20),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -82,12 +83,12 @@ class _SessionPageState extends State<SessionPage> {
                 widget.session.title,
                 locale: Locale('zh', 'TW'),
                 style: TextStyle(
-                  fontSize: 30.0,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            SizedBox(width: 10),
+            SizedBox(width: 20),
             ClipOval(
               child: Material(
                   child: InkWell(
@@ -102,16 +103,16 @@ class _SessionPageState extends State<SessionPage> {
     final main = [
       SizedBox(height: 5),
       Padding(
-        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+        padding: const EdgeInsets.only(left: 20, right: 20),
         child: Text(
           widget.session.presenter,
           locale: Locale('zh', 'TW'),
-          style: TextStyle(fontSize: 20.0),
+          style: TextStyle(fontSize: 20),
         ),
       ),
       SizedBox(height: 5),
       Padding(
-        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+        padding: const EdgeInsets.only(left: 20, right: 20),
         child: Text(
           '第 ${widget.session.conferenceDay} 天  ${widget.session.startTime} - ${widget.session.endTime}',
           locale: Locale('zh', 'TW'),
@@ -119,9 +120,11 @@ class _SessionPageState extends State<SessionPage> {
       ),
       SizedBox(height: 20),
       Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(left: 20, right: 20),
         child: OurMarkdown(
           data: text,
+          styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+              p: Theme.of(context).textTheme.body1.copyWith(fontSize: 17)),
           onTapLink: (link) => launch(link),
         ),
       ),
@@ -134,7 +137,7 @@ class _SessionPageState extends State<SessionPage> {
       var textSpans =
           widget.program.reviewTags.map((x) => TextSpan(text: x)).toList();
       widgets.add(Padding(
-        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+        padding: const EdgeInsets.only(left: 20, right: 20),
         child: Text.rich(TextSpan(children: textSpans)),
       ));
     }
@@ -143,25 +146,31 @@ class _SessionPageState extends State<SessionPage> {
 
     if (widget.program != null) {
       widgets.add(Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.only(left: 20, right: 20),
           child: Text("關於講者", style: TextStyle(fontSize: 20))));
       widgets.add(Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.only(left: 20, right: 20),
           child: Divider(color: Colors.grey)));
 
       for (final speaker in widget.program.speakers) {
         widgets.addAll([
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(20),
             child: Text(
               speaker.name,
               style: Theme.of(context).textTheme.title,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(left: 20, right: 20),
             child: OurMarkdown(
               data: speaker.biography,
+              styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
+                  .copyWith(
+                      p: Theme.of(context)
+                          .textTheme
+                          .body1
+                          .copyWith(fontSize: 17)),
               onTapLink: (link) => launch(link),
             ),
           )
@@ -183,7 +192,7 @@ class _SessionPageState extends State<SessionPage> {
         body: Scrollbar(
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 640.0),
+              constraints: BoxConstraints(maxWidth: 640),
               child: body,
             ),
           ),

@@ -18,19 +18,19 @@ class _AboutPageState extends State<AboutPage> {
     final venueSection = makeVenue();
     final aboutSection = makeAboutUs();
     final sponsorTitle = SliverPadding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
+        padding: const EdgeInsets.only(left: 20, right: 20),
         sliver: SliverList(
             delegate: SliverChildListDelegate(
                 [_AboutSectionTitle(text: 'Sponsors 贊助')])));
     final coTitle = SliverPadding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
+        padding: const EdgeInsets.only(left: 20, right: 20),
         sliver: SliverList(
             delegate: SliverChildListDelegate(
                 [_AboutSectionTitle(text: 'Co-organizers 合作夥伴')])));
     final coGrid = makeCoOrganizersGrid();
 
     final staffTitle = SliverPadding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
+        padding: const EdgeInsets.only(left: 20, right: 20),
         sliver: SliverList(
             delegate: SliverChildListDelegate(
                 [_AboutSectionTitle(text: 'Staffs 工作人員')])));
@@ -84,14 +84,14 @@ class _AboutPageState extends State<AboutPage> {
     final aboutSection =
         SliverList(delegate: SliverChildListDelegate(aboutWidgets));
     return SliverPadding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
+        padding: const EdgeInsets.only(left: 20, right: 20),
         sliver: aboutSection);
   }
 
   makeCoOrganizersGrid() {
     final data = coOrganizerData();
     return SliverPadding(
-      padding: const EdgeInsets.only(left: 10, right: 10),
+      padding: const EdgeInsets.only(left: 20, right: 20),
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate((context, index) {
           final item = data[index];
@@ -123,14 +123,14 @@ class _AboutPageState extends State<AboutPage> {
     if (state is DataBlocLoadingState) {
       return [
         SliverPadding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.only(left: 20, right: 20),
             sliver: SliverToBoxAdapter(child: CupertinoActivityIndicator()))
       ];
     }
     if (state is DataBlocErrorState) {
       return [
         SliverPadding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.only(left: 20, right: 20),
             sliver: SliverToBoxAdapter(child: Text('資料載入失敗')))
       ];
     }
@@ -147,7 +147,7 @@ class _AboutPageState extends State<AboutPage> {
         _SponsorGrid(sponsors: state.sponsors.bronze),
       ].map((sliver) {
         return SliverPadding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.only(left: 20, right: 20),
           sliver: sliver,
         );
       }).toList();
@@ -159,7 +159,7 @@ class _AboutPageState extends State<AboutPage> {
   makeStaffGrid() {
     final data = staffData();
     return SliverPadding(
-      padding: const EdgeInsets.only(left: 10, right: 10),
+      padding: const EdgeInsets.only(left: 20, right: 20),
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate((context, index) {
           final item = data[index];
@@ -212,7 +212,7 @@ class _AboutPageState extends State<AboutPage> {
         children: <Widget>[
           Text('國立臺灣大學博雅教學館'),
           CupertinoButton(
-            child: Text('在地圖中開啟'),
+            child: Text('地圖 >'),
             onPressed: () {
               var url = 'https://tinyurl.com/y4h9ja9y';
               launch(url);
@@ -224,7 +224,7 @@ class _AboutPageState extends State<AboutPage> {
     final venueSection =
         SliverList(delegate: SliverChildListDelegate(venueWidgets));
     return SliverPadding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
+        padding: const EdgeInsets.only(left: 20, right: 20),
         sliver: venueSection);
   }
 }
@@ -283,6 +283,7 @@ class _SponsorGrid extends StatelessWidget {
       }, childCount: sponsors.length),
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 200.0,
+        crossAxisSpacing: 10.0,
         childAspectRatio: 0.7,
       ),
     );

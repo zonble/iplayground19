@@ -126,7 +126,7 @@ class NotificationHelper {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
     var initializationSettingsAndroid =
-        AndroidInitializationSettings('ic_launcher');
+        AndroidInitializationSettings('app_icon');
     var initializationSettingsIOS = new IOSInitializationSettings(
         onDidReceiveLocalNotification:
             (int id, String title, String body, String payload) {

@@ -70,7 +70,6 @@ class _FavoritePageState extends State<FavoritePage> {
                     .cast<Session>()
                     .toList();
                 filterd.sort();
-                print(filterd);
 
                 var slivers = <Widget>[];
                 slivers.add(SliverToBoxAdapter(
