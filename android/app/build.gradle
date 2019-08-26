@@ -32,7 +32,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "net.zonble.iplayground19"
         minSdkVersion 21
         targetSdkVersion 28
@@ -45,7 +44,7 @@ android {
         release {
             keyAlias System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
             keyPassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
-            storeFile file(System.getenv("HOME") + "/keystores/my_keystore.jks")
+            storeFile file(System.getenv("HOME") + "/my_keystore.jks")
             storePassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PASSWORD")
         }
     }
