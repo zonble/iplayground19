@@ -144,13 +144,17 @@ class NotificationHelper {
   static DateTime getSessionTime(Session session) {
     final day = session.conferenceDay;
     final startTime = session.startTime;
+    return getTime(day, startTime);
+  }
+
+  static DateTime getTime(int day, String startTime) {
     final components = startTime.split(":");
     final hour = int.parse(components[0]);
     final minute = int.parse(components[1]);
 
     DateTime dateTime = DateTime.utc(2019, 9, 20 + day, hour, minute);
     // Taiwan is at UTC + 8
-    DateTime taiwanTime = dateTime.add(Duration(hours: 8));
+    DateTime taiwanTime = dateTime.subtract(Duration(hours: 8));
     return taiwanTime.subtract(Duration(minutes: 10));
   }
 
