@@ -15,16 +15,16 @@ class Session implements Comparable<Session> {
   String description;
 
   Session(Map map) {
-    conferenceDay = map['conference_day'];
-    startTime = map['start_time'];
-    endTime = map['end_time'];
-    sessionId = map['session_id'];
-    proposalId = map['proposal_id'];
-    title = map['title'];
-    presenter = map['presenter'];
-    roomName = map['room_name'];
-    trackName = map['track_name'];
-    description = map['desc'];
+    conferenceDay = map['conference_day'] ?? 0;
+    startTime = map['start_time'] ?? '';
+    endTime = map['end_time'] ?? '';
+    sessionId = map['session_id'] ?? '';
+    proposalId = map['proposal_id'] ?? '';
+    title = map['title'] ?? '';
+    presenter = map['presenter'] ?? '';
+    roomName = map['room_name'] ?? '';
+    trackName = map['track_name'] ?? '';
+    description = map['desc'] ?? '';
   }
 
   int compareTo(Session session) {
@@ -38,6 +38,7 @@ class Session implements Comparable<Session> {
     }
     var result = this.startTime.compareTo(session.startTime);
     if (result != 0) return result;
+    print(this.roomName.compareTo(session.roomName));
     return this.roomName.compareTo(session.roomName);
   }
 }
