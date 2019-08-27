@@ -1,6 +1,7 @@
 # iPlayground app 2019
 
-<!-- [https://app.bitrise.io/app/9452aea37b7d2d45.svg?token=ykuUH8L5yjP3rf3P8cuuYQ] -->
+[![bitrise](https://app.bitrise.io/app/9452aea37b7d2d45.svg?token=ykuUH8L5yjP3rf3P8cuuYQ)](https://app.bitrise.io/app/9452aea37b7d2d45)
+
 
 The repo is for [iPlayground 2019](https://iplayground.io/2019/), an iOS
 conference in Taipei, Taiwan.
