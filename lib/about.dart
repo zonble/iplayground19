@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 center(Widget child) => Center(
         child: ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 680),
-      child: child,
+      child: Container(width: double.infinity, child: child),
     ));
 
 centerGrid(context, Widget grid) {
@@ -31,17 +31,26 @@ class AboutPage extends StatefulWidget {
 class _AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
-    final logo =
-        SliverToBoxAdapter(child: center(Image.asset('images/logo.png')));
+    final logo = SliverPadding(
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        sliver:
+            SliverToBoxAdapter(child: center(Image.asset('images/logo.png'))));
     final venueSection = makeVenue();
     final aboutSection = makeAboutUs();
-    final sponsorTitle = SliverToBoxAdapter(
-        child: center(_AboutSectionTitle(text: 'Sponsors 贊助')));
-    final coTitle = SliverToBoxAdapter(
-        child: center(_AboutSectionTitle(text: 'Co-organizers 合作夥伴')));
+    final sponsorTitle = SliverPadding(
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        sliver: SliverToBoxAdapter(
+            child: center(_AboutSectionTitle(text: 'Sponsors 贊助'))));
+
+    final coTitle = SliverPadding(
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        sliver: SliverToBoxAdapter(
+            child: center(_AboutSectionTitle(text: 'Co-organizers 合作夥伴'))));
     final coGrid = centerGrid(context, makeCoOrganizersGrid());
-    final staffTitle = SliverToBoxAdapter(
-        child: center(_AboutSectionTitle(text: 'Staffs 工作人員')));
+    final staffTitle = SliverPadding(
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        sliver: SliverToBoxAdapter(
+            child: center(_AboutSectionTitle(text: 'Staffs 工作人員'))));
     final staffGrid = centerGrid(context, makeStaffGrid());
 
     // --
@@ -295,7 +304,9 @@ class _SponsorTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return center(Container(
       width: double.infinity,
-      child: Text(text, style: Theme.of(context).textTheme.title),
+      child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: Text(text, style: Theme.of(context).textTheme.title)),
     ));
   }
 }
