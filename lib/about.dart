@@ -35,13 +35,13 @@ class _AboutPageState extends State<AboutPage> {
         SliverToBoxAdapter(child: center(Image.asset('images/logo.png')));
     final venueSection = makeVenue();
     final aboutSection = makeAboutUs();
-    final sponsorTitle =
-        SliverToBoxAdapter(child: _AboutSectionTitle(text: 'Sponsors 贊助'));
+    final sponsorTitle = SliverToBoxAdapter(
+        child: center(_AboutSectionTitle(text: 'Sponsors 贊助')));
     final coTitle = SliverToBoxAdapter(
-        child: _AboutSectionTitle(text: 'Co-organizers 合作夥伴'));
+        child: center(_AboutSectionTitle(text: 'Co-organizers 合作夥伴')));
     final coGrid = centerGrid(context, makeCoOrganizersGrid());
-    final staffTitle =
-        SliverToBoxAdapter(child: _AboutSectionTitle(text: 'Staffs 工作人員'));
+    final staffTitle = SliverToBoxAdapter(
+        child: center(_AboutSectionTitle(text: 'Staffs 工作人員')));
     final staffGrid = centerGrid(context, makeStaffGrid());
 
     // --
