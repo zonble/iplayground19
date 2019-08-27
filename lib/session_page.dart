@@ -256,7 +256,6 @@ class _SessionPageState extends State<SessionPage> {
             .replaceAll(',', '')
             .toLowerCase() +
         '.png';
-    print(name);
     try {
       await rootBundle.load(name);
       setState(() => imageName = name);

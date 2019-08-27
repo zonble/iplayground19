@@ -47,7 +47,9 @@ class _MyAppState extends State<MyApp> {
         theme: CupertinoThemeData(
           primaryColor: Color.fromRGBO(80, 121, 255, 1.0),
         ),
-        home: MyHomePage(),
+        home: Theme(
+            data: ThemeData(splashColor: Colors.transparent),
+            child: MyHomePage()),
       ),
     );
   }
