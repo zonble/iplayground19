@@ -61,11 +61,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final List<GlobalKey<NavigatorState>> keys =
+      List.generate(5, (_) => GlobalKey());
+
+//  final List<ScrollController> scrollControllers =
+//      List.generate(5, (_) => ScrollController());
+  int currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        return await Future<bool>.value(false);
+        return await keys[currentIndex].currentState.maybePop() == false;
       },
       child: CupertinoTabScaffold(
         tabBar: CupertinoTabBar(
@@ -87,22 +94,40 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text("關於"),
             ),
           ],
+          onTap: (index) {
+            // back home only if not switching tab
+            if (currentIndex == index) {
+              keys[index].currentState.popUntil((r) => r.isFirst);
+            }
+            currentIndex = index;
+          },
         ),
         tabBuilder: (context, index) {
           switch (index) {
             case 0:
               return CupertinoTabView(
-                  builder: (context) => SessionsPage(day: 1));
+                navigatorKey: keys[0],
+                builder: (context) => SessionsPage(day: 1),
+              );
             case 1:
               return CupertinoTabView(
-                  builder: (context) => SessionsPage(day: 2));
+                navigatorKey: keys[1],
+                builder: (context) => SessionsPage(day: 2),
+              );
             case 2:
-              return CupertinoTabView(builder: (context) => FavoritePage());
+              return CupertinoTabView(
+                navigatorKey: keys[2],
+                builder: (context) => FavoritePage(),
+              );
             case 3:
-              return CupertinoTabView(builder: (context) => AboutPage());
+              return CupertinoTabView(
+                navigatorKey: keys[3],
+                builder: (context) => AboutPage(),
+              );
 
             default:
               return CupertinoTabView(
+                  navigatorKey: keys[4],
                   builder: (context) =>
                       CupertinoPageScaffold(child: Container()));
           }
