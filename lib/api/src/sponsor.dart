@@ -31,9 +31,10 @@ class Sponsors {
   }
 }
 
+/// Fetches sponsors.
 Future<Sponsors> fetchSponsors() async {
   final response = await http.get(
-      'https://raw.githubusercontent.com/iplayground/2019app/master/data/sponsors.json');
+      'https://raw.githubusercontent.com/iplayground/SessionData/master/sponsors.json');
   final map = json.decode(response.body);
   return Sponsors(map['sponsors']);
 }

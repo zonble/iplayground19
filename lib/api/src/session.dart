@@ -38,14 +38,14 @@ class Session implements Comparable<Session> {
     }
     var result = this.startTime.compareTo(session.startTime);
     if (result != 0) return result;
-    print(this.roomName.compareTo(session.roomName));
     return this.roomName.compareTo(session.roomName);
   }
 }
 
+/// Fetches sessions.
 Future<List<Session>> fetchSessions() async {
   final response = await http.get(
-      'https://raw.githubusercontent.com/iplayground/2019app/master/data/sessions.json');
+      'https://raw.githubusercontent.com/iplayground/SessionData/master/sessions.json');
   final map = json.decode(response.body);
   List list = map['sessions'];
   return List.from(list.cast<Map>().map((x) => (Session(x))));
