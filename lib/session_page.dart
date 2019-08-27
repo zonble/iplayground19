@@ -63,7 +63,7 @@ class _SessionPageState extends State<SessionPage> {
 
     var widgets = <Widget>[
       SizedBox(height: MediaQuery.of(context).padding.top),
-      SizedBox(height: MediaQuery.of(context).padding.top),
+      SizedBox(height: 70),
       SizedBox(height: 20),
       Padding(
         padding:
@@ -122,7 +122,7 @@ class _SessionPageState extends State<SessionPage> {
       Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: OurMarkdown(
-          data: text,
+          data: text.trim(),
           styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
               p: Theme.of(context).textTheme.body1.copyWith(fontSize: 17)),
           onTapLink: (link) => launch(link),
@@ -164,7 +164,7 @@ class _SessionPageState extends State<SessionPage> {
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: OurMarkdown(
-              data: speaker.biography,
+              data: speaker.biography.trim(),
               styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
                   .copyWith(
                       p: Theme.of(context)
@@ -176,9 +176,35 @@ class _SessionPageState extends State<SessionPage> {
           )
         ]);
       }
+
+      final String twitter = widget.program.customFields['twitter_account'];
+      if (twitter != null && twitter.isNotEmpty) {
+        final row = Row(
+          children: <Widget>[
+            Text('Twitter:'),
+            SizedBox(width: 10),
+            FlatButton(
+                child: Text(twitter,
+                    style: TextStyle(color: Theme.of(context).primaryColor)),
+                onPressed: () => launch(twitter)),
+          ],
+        );
+        widgets.add(Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: row,
+        ));
+      }
     }
     widgets.add(SizedBox(height: 50));
     widgets.add(SizedBox(height: MediaQuery.of(context).padding.bottom));
+    widgets = widgets
+        .map((x) => Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 680),
+                child: Container(width: double.infinity, child: x),
+              ),
+            ))
+        .toList();
 
     var body = CustomScrollView(
       slivers: [
@@ -190,12 +216,7 @@ class _SessionPageState extends State<SessionPage> {
       navigationBar: CupertinoNavigationBar(),
       child: Scaffold(
         body: Scrollbar(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 640),
-              child: body,
-            ),
-          ),
+          child: body,
         ),
       ),
     );

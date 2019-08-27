@@ -93,6 +93,7 @@ class _SessionsPageState extends State<SessionsPage> {
                     children: items);
               }, childCount: day.length),
             );
+
             widgets.addAll([
               SliverToBoxAdapter(
                   child: SizedBox(height: MediaQuery.of(context).padding.top)),
@@ -135,7 +136,8 @@ class TimeSectionLabel extends StatelessWidget {
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 640),
           child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
             child: Container(
                 width: double.infinity,
                 child: Text(

@@ -28,7 +28,7 @@ class SessionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 640),
+          constraints: BoxConstraints(maxWidth: 680),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: SafeArea(

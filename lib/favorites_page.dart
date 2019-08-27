@@ -113,12 +113,7 @@ class _FavoritePageState extends State<FavoritePage> {
       ),
       child: Scaffold(
         body: Scrollbar(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 640.0),
-              child: content,
-            ),
-          ),
+          child: content,
         ),
       ),
     );
