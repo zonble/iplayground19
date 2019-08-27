@@ -7,6 +7,10 @@ import 'package:iplayground19/bloc/notification.dart';
 import 'package:iplayground19/components/session_card.dart';
 
 class FavoritePage extends StatefulWidget {
+  final ScrollController scrollController;
+
+  FavoritePage({Key key, this.scrollController}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _FavoritePageState();
 }
@@ -96,7 +100,10 @@ class _FavoritePageState extends State<FavoritePage> {
                     child: SizedBox(
                         height: MediaQuery.of(context).padding.bottom)));
 
-                return CustomScrollView(slivers: slivers);
+                return CustomScrollView(
+                  slivers: slivers,
+                  controller: widget.scrollController,
+                );
               }
               return Container();
             },

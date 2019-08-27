@@ -63,16 +63,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<GlobalKey<NavigatorState>> keys =
       List.generate(5, (_) => GlobalKey());
-
-//  final List<ScrollController> scrollControllers =
-//      List.generate(5, (_) => ScrollController());
+  final List<ScrollController> scrollControllers =
+      List.generate(5, (_) => ScrollController());
   int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        return await keys[currentIndex].currentState.maybePop() == false;
+        final currentState = keys[currentIndex].currentState;
+        await currentState.maybePop();
+        return false;
       },
       child: CupertinoTabScaffold(
         tabBar: CupertinoTabBar(
@@ -97,7 +98,19 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: (index) {
             // back home only if not switching tab
             if (currentIndex == index) {
-              keys[index].currentState.popUntil((r) => r.isFirst);
+              final currentState = keys[index].currentState;
+              if (currentState.canPop()) {
+                currentState.popUntil((r) => r.isFirst);
+              } else {
+                final controller = scrollControllers[index];
+                if (controller.hasClients) {
+                  controller.animateTo(
+                    0,
+                    duration: Duration(microseconds: 250),
+                    curve: Curves.linear,
+                  );
+                }
+              }
             }
             currentIndex = index;
           },
@@ -107,22 +120,28 @@ class _MyHomePageState extends State<MyHomePage> {
             case 0:
               return CupertinoTabView(
                 navigatorKey: keys[0],
-                builder: (context) => SessionsPage(day: 1),
+                builder: (context) => SessionsPage(
+                    day: 1, scrollController: scrollControllers[0]),
               );
             case 1:
               return CupertinoTabView(
                 navigatorKey: keys[1],
-                builder: (context) => SessionsPage(day: 2),
+                builder: (context) => SessionsPage(
+                    day: 2, scrollController: scrollControllers[1]),
               );
             case 2:
               return CupertinoTabView(
                 navigatorKey: keys[2],
-                builder: (context) => FavoritePage(),
+                builder: (context) => FavoritePage(
+                  scrollController: scrollControllers[2],
+                ),
               );
             case 3:
               return CupertinoTabView(
                 navigatorKey: keys[3],
-                builder: (context) => AboutPage(),
+                builder: (context) => AboutPage(
+                  scrollController: scrollControllers[3],
+                ),
               );
 
             default:

@@ -24,6 +24,10 @@ centerGrid(context, Widget grid) {
 }
 
 class AboutPage extends StatefulWidget {
+  final ScrollController scrollController;
+
+  AboutPage({Key key, this.scrollController}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _AboutPageState();
 }
@@ -77,7 +81,10 @@ class _AboutPageState extends State<AboutPage> {
                     child:
                         SizedBox(height: MediaQuery.of(context).padding.top)),
               ]);
-              return CustomScrollView(slivers: slivers);
+              return CustomScrollView(
+                slivers: slivers,
+                controller: widget.scrollController,
+              );
             },
           )),
         ));

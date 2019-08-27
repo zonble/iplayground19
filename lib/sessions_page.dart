@@ -7,10 +7,12 @@ import 'package:iplayground19/components/session_card.dart';
 
 class SessionsPage extends StatefulWidget {
   final int day;
+  final ScrollController scrollController;
 
   SessionsPage({
     Key key,
     this.day,
+    this.scrollController,
   }) : super(key: key);
 
   @override
@@ -105,7 +107,10 @@ class _SessionsPageState extends State<SessionsPage> {
             ]);
             return Scaffold(
               body: Scrollbar(
-                child: CustomScrollView(slivers: widgets),
+                child: CustomScrollView(
+                  slivers: widgets,
+                  controller: widget.scrollController,
+                ),
               ),
             );
           }
