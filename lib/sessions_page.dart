@@ -134,7 +134,7 @@ class TimeSectionLabel extends StatelessWidget {
       bottom: false,
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 640),
+          constraints: BoxConstraints(maxWidth: 680),
           child: Padding(
             padding:
                 const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:html2md/html2md.dart' as html2md;
@@ -100,7 +101,7 @@ class _SessionPageState extends State<SessionPage> {
       ),
       SizedBox(height: 20),
     ];
-    final main = [
+    final metadata = [
       SizedBox(height: 5),
       Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
@@ -119,16 +120,6 @@ class _SessionPageState extends State<SessionPage> {
         ),
       ),
       SizedBox(height: 20),
-      Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: OurMarkdown(
-          data: text.trim(),
-          styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-              p: Theme.of(context).textTheme.body1.copyWith(fontSize: 17)),
-          onTapLink: (link) => launch(link),
-        ),
-      ),
-      SizedBox(height: 30),
     ];
 
     widgets.addAll(title);
@@ -142,15 +133,46 @@ class _SessionPageState extends State<SessionPage> {
       ));
     }
 
-    widgets.addAll(main);
+    widgets.addAll(metadata);
+    final textBody = [
+      Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        child: OurMarkdown(
+          data: text.trim(),
+          styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+              p: Theme.of(context).textTheme.body1.copyWith(fontSize: 17)),
+          onTapLink: (link) => launch(link),
+        ),
+      ),
+      SizedBox(height: 30),
+    ];
+
+    widgets.addAll(textBody);
 
     if (widget.program != null) {
       widgets.add(Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Text("關於講者", style: TextStyle(fontSize: 20))));
+
       widgets.add(Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Divider(color: Colors.grey)));
+
+      if (imageName != null) {
+        final image = Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              width: 200,
+              height: 200,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ClipOval(
+                  child: Image.asset(imageName),
+                ),
+              ),
+            ));
+        widgets.add(image);
+      }
 
       for (final speaker in widget.program.speakers) {
         widgets.addAll([
@@ -183,10 +205,12 @@ class _SessionPageState extends State<SessionPage> {
           children: <Widget>[
             Text('Twitter:'),
             SizedBox(width: 10),
-            FlatButton(
-                child: Text(twitter,
-                    style: TextStyle(color: Theme.of(context).primaryColor)),
-                onPressed: () => launch(twitter)),
+            Flexible(
+              child: FlatButton(
+                  child: Text(twitter,
+                      style: TextStyle(color: Theme.of(context).primaryColor)),
+                  onPressed: () => launch(twitter)),
+            ),
           ],
         );
         widgets.add(Padding(
@@ -220,5 +244,31 @@ class _SessionPageState extends State<SessionPage> {
         ),
       ),
     );
+  }
+
+  String imageName;
+
+  detectHasImage() async {
+    var name = 'images/a_' +
+        widget.session.presenter
+            .replaceAll(' ', '_')
+            .replaceAll('-', '_')
+            .replaceAll(',', '')
+            .toLowerCase() +
+        '.png';
+    print(name);
+    try {
+      await rootBundle.load(name);
+      setState(() => imageName = name);
+    } catch (e) {
+      print(e);
+      return;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    detectHasImage();
   }
 }

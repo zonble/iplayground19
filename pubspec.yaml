@@ -26,6 +26,26 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - images/a_akos_birmacher.png
+    - images/a_chiao_te_ni.png
+    - images/a_cj_lin.png
+    - images/a_daiki_matsudate.png
+    - images/a_fengyi.png
+    - images/a_han_chang.png
+    - images/a_jackychen.png
+    - images/a_jeff_lin.png
+    - images/a_john_lin.png
+    - images/a_kishikawa_katsumi.png
+    - images/a_li_heng_hsu.png
+    - images/a_lynn.png
+    - images/a_mars.png
+    - images/a_nelson.png
+    - images/a_shihting_huang_(neo).png
+    - images/a_yllan.png
+    - images/a_zonble.png
+    - images/a_彼得潘.png
+    - images/a_羊小咩.png
+    - images/a_黃惠勤.png
     - images/co_aatp.png
     - images/co_app_girls.png
     - images/co_cocoaheads_tw.png
