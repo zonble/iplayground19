@@ -269,6 +269,6 @@ class _SessionPageState extends State<SessionPage> {
   @override
   void initState() {
     super.initState();
-    detectHasImage();
+    Future.delayed(Duration(milliseconds: 250), () => detectHasImage());
   }
 }

@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (controller.hasClients) {
                   controller.animateTo(
                     0,
-                    duration: Duration(microseconds: 250),
+                    duration: Duration(milliseconds: 250),
                     curve: Curves.linear,
                   );
                 }
