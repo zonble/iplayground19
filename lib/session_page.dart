@@ -60,6 +60,14 @@ class _SessionPageState extends State<SessionPage> {
     if (text.contains('<p>') || text.contains('<h4>')) {
       text = html2md.convert(text);
     }
+    final urlPattern =
+        r"(https?|ftp)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:,.;]*)?";
+    final regex = new RegExp(urlPattern, caseSensitive: false);
+    final matches = regex.allMatches(text);
+    final links = matches.map((x) => text.substring(x.start, x.end));
+    for (final link in links) {
+      text = text.replaceAll(link, '[$link]($link)');
+    }
     NotificationBloc bloc = BlocProvider.of(context);
 
     var widgets = <Widget>[
@@ -139,7 +147,10 @@ class _SessionPageState extends State<SessionPage> {
           data: text.trim(),
           styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
               p: Theme.of(context).textTheme.body1.copyWith(fontSize: 17)),
-          onTapLink: (link) => launch(link),
+          onTapLink: (link) => launch(
+            link,
+            forceSafariVC: false,
+          ),
         ),
       ),
       SizedBox(height: 30),
@@ -207,7 +218,10 @@ class _SessionPageState extends State<SessionPage> {
               child: FlatButton(
                   child: Text(twitter,
                       style: TextStyle(color: Theme.of(context).primaryColor)),
-                  onPressed: () => launch(twitter)),
+                  onPressed: () => launch(
+                        twitter,
+                        forceSafariVC: false,
+                      )),
             ),
           ],
         );

@@ -189,7 +189,7 @@ class _AboutPageState extends State<AboutPage> {
                       onTap: () {
                         var link = item[3];
                         if (link != null) {
-                          launch(link);
+                          launch(link, forceSafariVC: false);
                         }
                       },
                     ),
@@ -224,7 +224,10 @@ class _AboutPageState extends State<AboutPage> {
             child: Text('地圖 >'),
             onPressed: () {
               var url = 'https://tinyurl.com/y4h9ja9y';
-              launch(url);
+              launch(
+                url,
+                forceSafariVC: false,
+              );
             },
           )
         ],
