@@ -124,12 +124,10 @@ class _SessionPageState extends State<SessionPage> {
 
     widgets.addAll(title);
 
-    if (widget.program.reviewTags.isNotEmpty) {
-      var textSpans =
-          widget.program.reviewTags.map((x) => TextSpan(text: x)).toList();
+    if (widget.program.reviewTags.contains('workshop')) {
       widgets.add(Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
-        child: Text.rich(TextSpan(children: textSpans)),
+        child: Text('workshop'),
       ));
     }
 
@@ -203,7 +201,7 @@ class _SessionPageState extends State<SessionPage> {
       if (twitter != null && twitter.isNotEmpty) {
         final row = Row(
           children: <Widget>[
-            Text('Twitter:'),
+            Text('SNS:'),
             SizedBox(width: 10),
             Flexible(
               child: FlatButton(
