@@ -27,6 +27,21 @@ class Session implements Comparable<Session> {
     description = map['desc'] ?? '';
   }
 
+  Map toJson() {
+    var map = Map();
+    map['conference_day'] = conferenceDay;
+    map['start_time'] = startTime;
+    map['end_time'] = endTime;
+    map['session_id'] = sessionId;
+    map['proposal_id'] = proposalId;
+    map['title'] = title;
+    map['presenter'] = presenter;
+    map['room_name'] = roomName;
+    map['track_name'] = trackName;
+    map['desc'] = description;
+    return map;
+  }
+
   int compareTo(Session session) {
     if (this.sessionId == session.sessionId) {
       return 0;

@@ -10,6 +10,11 @@ class Speaker {
     name = map['name'];
     biography = map['bio'];
   }
+
+  Map toJson() => {
+        'name': name,
+        'bio': biography,
+      };
 }
 
 class Program {
@@ -34,6 +39,20 @@ class Program {
     customFields = map['custom_fields'];
     List speakerMapList = map['speakers'] ?? [];
     speakers = List<Speaker>.from(speakerMapList.map((x) => Speaker(x)));
+  }
+
+  Map toJson() {
+    var map = Map();
+    map['title'] = title;
+    map['abstract'] = abstract;
+    map['review_tags'] = reviewTags;
+    map['id'] = id;
+    map['track'] = track;
+    map['video_url'] = videoUrl;
+    map['slides_url'] = slideUrl;
+    map['custom_fields'] = customFields;
+    map['speakers'] = List<Map>.from(speakers.map((x) => x.toJson()));
+    return map;
   }
 }
 

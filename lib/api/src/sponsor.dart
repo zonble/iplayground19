@@ -12,6 +12,12 @@ class Sponsor {
     imageUrl = map['picture'];
     description = map['desc'];
   }
+
+  Map toJson() => {
+        'name': name,
+        'picture': imageUrl,
+        'desc': description,
+      };
 }
 
 class Sponsors {
@@ -28,6 +34,18 @@ class Sponsors {
     gold = convert(map['gold']);
     silver = convert(map['silver']);
     bronze = convert(map['bronze']);
+  }
+
+  List<Map> convertSpeakersToList(List<Sponsor> list) =>
+      List<Map>.of(list.map((x) => x.toJson()));
+
+  Map toJson() {
+    var map = Map();
+    map['diamond'] = convertSpeakersToList(diamond);
+    map['gold'] = convertSpeakersToList(gold);
+    map['silver'] = convertSpeakersToList(silver);
+    map['bronze'] = convertSpeakersToList(bronze);
+    return map;
   }
 }
 

@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:iplayground19/bloc/data_bloc.dart';
 import 'package:iplayground19/api/api.dart';
@@ -38,6 +39,16 @@ class DataBlocLoadedStateMatcher extends CustomMatcher {
 }
 
 void main() {
+  setUp(() {
+    final channel = MethodChannel('plugins.flutter.io/shared_preferences');
+    channel.setMockMethodCallHandler((call) async {
+      if (call.method == 'getAll') {
+        return {};
+      }
+      return null;
+    });
+  });
+
   test("Test Bloc", () async {
     final bloc = DataBloc();
     bloc.dispatch(DataBlocEvent.load);
