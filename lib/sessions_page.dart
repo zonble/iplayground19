@@ -97,8 +97,15 @@ class _SessionsPageState extends State<SessionsPage> {
             );
 
             widgets.addAll([
-              SliverToBoxAdapter(
-                  child: SizedBox(height: MediaQuery.of(context).padding.top)),
+              SliverPadding(
+                padding: const EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top),
+                sliver: CupertinoSliverRefreshControl(
+                  refreshTriggerPullDistance: 100,
+                  onRefresh: () => Future.delayed(Duration(seconds: 0),
+                      () => bloc.dispatch(DataBlocEvent.refresh)),
+                ),
+              ),
               list,
               SliverToBoxAdapter(child: SizedBox(height: 30)),
               SliverToBoxAdapter(
