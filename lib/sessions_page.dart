@@ -98,7 +98,7 @@ class _SessionsPageState extends State<SessionsPage> {
 
             widgets.addAll([
               SliverPadding(
-                padding: const EdgeInsets.only(
+                padding: EdgeInsets.only(
                     top: MediaQuery.of(context).padding.top),
                 sliver: CupertinoSliverRefreshControl(
                   refreshTriggerPullDistance: 100,
