@@ -60,7 +60,7 @@ class Session implements Comparable<Session> {
 /// Fetches sessions.
 Future<List<Session>> fetchSessions() async {
   final response = await http.get(
-      'https://raw.githubusercontent.com/iplayground/SessionData/master/sessions.json');
+      'https://raw.githubusercontent.com/iplayground/SessionData/2019/v2/sessions.json');
   final map = json.decode(response.body);
   List list = map['sessions'];
   return List.from(list.cast<Map>().map((x) => (Session(x))));

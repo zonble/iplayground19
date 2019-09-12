@@ -2,15 +2,21 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+/// Represents speakers.
 class Speaker {
+  /// Name of the speaker.
   String name;
+
+  /// Biography of the speaker.
   String biography;
 
+  /// Creates a new instance.
   Speaker(Map map) {
     name = map['name'];
     biography = map['bio'];
   }
 
+  /// Converts to JSON.
   Map toJson() => {
         'name': name,
         'bio': biography,
@@ -59,7 +65,7 @@ class Program {
 /// Fetches programs.
 Future<List<Program>> fetchPrograms() async {
   final response = await http.get(
-      'https://raw.githubusercontent.com/iplayground/SessionData/master/program.json');
+      'https://raw.githubusercontent.com/iplayground/SessionData/2019/v2/program.json');
   final map = json.decode(response.body);
   List list = map['program'];
   return List.from(list.cast<Map>().map((x) => (Program(x))));

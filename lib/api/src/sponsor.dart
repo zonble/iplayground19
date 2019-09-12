@@ -20,20 +20,51 @@ class Sponsor {
       };
 }
 
-class Sponsors {
-  List<Sponsor> diamond;
-  List<Sponsor> gold;
-  List<Sponsor> silver;
-  List<Sponsor> bronze;
+class SponsorSection {
+  List<Sponsor> sponsors;
+  String title;
 
-  List<Sponsor> convert(List list) =>
-      List.from(list.cast<Map>().map((x) => Sponsor(x)));
+  SponsorSection(Map map) {
+    title = map['title'];
+    List list = map['items'];
+    sponsors = List<Sponsor>.from(list.cast<Map>().map((x) => Sponsor(x)));
+  }
+
+  Map toJson() {
+    Map map = {};
+    map['title'] = title;
+    map['items'] = List<Map>.from(sponsors.map((x) => x.toJson()));
+    return map;
+  }
+}
+
+class Partner {
+  String name;
+  String iconUrl;
+  String link;
+
+  Partner(Map map) {
+    name = map['name'];
+    iconUrl = map['icon'];
+    link = map['link'];
+  }
+
+  Map toJson() => {
+        'name': name,
+        'icon': iconUrl,
+        'link': link,
+      };
+}
+
+class Sponsors {
+  List<SponsorSection> sections;
+  List<Partner> partners;
 
   Sponsors(Map map) {
-    diamond = convert(map['diamond']);
-    gold = convert(map['gold']);
-    silver = convert(map['silver']);
-    bronze = convert(map['bronze']);
+    List sponsorList = map['sponsors'];
+    sections = List.from(sponsorList.map((x) => SponsorSection(x)));
+    List partnerList = map['partner'];
+    partners = List.from(partnerList.map((x) => Partner(x)));
   }
 
   List<Map> convertSpeakersToList(List<Sponsor> list) =>
@@ -41,18 +72,16 @@ class Sponsors {
 
   Map toJson() {
     var map = Map();
-    map['diamond'] = convertSpeakersToList(diamond);
-    map['gold'] = convertSpeakersToList(gold);
-    map['silver'] = convertSpeakersToList(silver);
-    map['bronze'] = convertSpeakersToList(bronze);
+    map['sponsors'] = List<Map>.from(sections.map((x) => x.toJson()));
+    map['partner'] = List<Map>.from(partners.map((x) => x.toJson()));
     return map;
   }
 }
 
-/// Fetches sponsors.
+/// Fetches sponsors and partners.
 Future<Sponsors> fetchSponsors() async {
   final response = await http.get(
-      'https://raw.githubusercontent.com/iplayground/SessionData/master/sponsors.json');
+      'https://raw.githubusercontent.com/iplayground/SessionData/2019/v2/sponsors.json');
   final map = json.decode(response.body);
-  return Sponsors(map['sponsors']);
+  return Sponsors(map);
 }

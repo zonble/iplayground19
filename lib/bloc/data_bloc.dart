@@ -21,21 +21,21 @@ class CacheRepository {
   Future<Cache> load() async {
     final instance = await SharedPreferences.getInstance();
     Sponsors sponsors = () {
-      final sponsorsJson = instance.getString('sponsors');
+      final sponsorsJson = instance.getString('sponsors_v2');
       if (sponsorsJson == null) return null;
       final Map sponsorsMap = json.decode(sponsorsJson);
       return Sponsors(sponsorsMap);
     }();
 
     List<Program> programs = () {
-      final programsJson = instance.getString('programs');
+      final programsJson = instance.getString('programs_v2');
       if (programsJson == null) return null;
       final List programMapList = json.decode(programsJson);
       return List<Program>.from(programMapList.map((x) => Program(x)));
     }();
 
     List<Session> sessions = () {
-      final sessionsJson = instance.getString('sessions');
+      final sessionsJson = instance.getString('sessions_v2');
       if (sessionsJson == null) return null;
       final List sessionsMapList = json.decode(sessionsJson);
       return List<Session>.from(sessionsMapList.map((x) => Session(x)));
@@ -53,10 +53,10 @@ class CacheRepository {
 
   save(Cache cache) async {
     final instance = await SharedPreferences.getInstance();
-    instance.setString('sponsors', json.encode(cache.sponsors));
-    instance.setString('programs',
+    instance.setString('sponsors_v2', json.encode(cache.sponsors));
+    instance.setString('programs_v2',
         json.encode(cache.programs.map((x) => x.toJson()).toList()));
-    instance.setString('sessions',
+    instance.setString('sessions_v2',
         json.encode(cache.sessions.map((x) => x.toJson()).toList()));
   }
 }

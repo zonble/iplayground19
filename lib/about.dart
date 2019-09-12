@@ -50,7 +50,7 @@ class _AboutPageState extends State<AboutPage> {
         padding: const EdgeInsets.only(left: 20, right: 20),
         sliver: SliverToBoxAdapter(
             child: center(_AboutSectionTitle(text: 'Co-organizers 合作夥伴'))));
-    final coGrid = centerGrid(context, makeCoOrganizersGrid());
+
     final staffTitle = SliverPadding(
         padding: const EdgeInsets.only(left: 20, right: 20),
         sliver: SliverToBoxAdapter(
@@ -74,7 +74,7 @@ class _AboutPageState extends State<AboutPage> {
               slivers.addAll(makeSponsorGrid(state));
               slivers.addAll([
                 coTitle,
-                coGrid,
+                centerGrid(context, makeCoOrganizersGrid(state)),
                 staffTitle,
                 staffGrid,
                 SliverToBoxAdapter(
@@ -108,32 +108,49 @@ class _AboutPageState extends State<AboutPage> {
         sliver: aboutSection);
   }
 
-  makeCoOrganizersGrid() {
-    final data = coOrganizerData();
-    return SliverGrid(
-      delegate: SliverChildBuilderDelegate((context, index) {
-        final item = data[index];
-        return LayoutBuilder(builder: (context, constraints) {
-          return Container(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () => launch(item[1]),
-                child: Container(),
+  makeCoOrganizersGrid(DataBlocState state) {
+    if (state is DataBlocLoadingState) {
+      return [
+        SliverPadding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            sliver: SliverToBoxAdapter(child: CupertinoActivityIndicator()))
+      ];
+    }
+    if (state is DataBlocErrorState) {
+      return [
+        SliverPadding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            sliver: SliverToBoxAdapter(child: Text('資料載入失敗')))
+      ];
+    }
+
+    if (state is DataBlocLoadedState) {
+      var data = state.sponsors.partners;
+      return SliverGrid(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final item = data[index];
+          return LayoutBuilder(builder: (context, constraints) {
+            return Container(
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => launch(item.link),
+                  child: Container(),
+                ),
               ),
-            ),
-            width: constraints.maxWidth,
-            height: constraints.maxHeight,
-            decoration: BoxDecoration(
-                image: DecorationImage(image: AssetImage(item[0]))),
-          );
-        });
-      }, childCount: data.length),
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 200.0,
-        crossAxisSpacing: 10.0,
-      ),
-    );
+              width: constraints.maxWidth,
+              height: constraints.maxHeight,
+              decoration: BoxDecoration(
+                  image: DecorationImage(image: AssetImage(item.iconUrl))),
+            );
+          });
+        }, childCount: data.length),
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 200.0,
+          crossAxisSpacing: 10.0,
+        ),
+      );
+    }
   }
 
   List<Widget> makeSponsorGrid(DataBlocState state) {
@@ -153,16 +170,16 @@ class _AboutPageState extends State<AboutPage> {
     }
 
     if (state is DataBlocLoadedState) {
-      return <Widget>[
-        SliverToBoxAdapter(child: _SponsorTitle(text: '鑽石贊助')),
-        centerGrid(context, _SponsorGrid(sponsors: state.sponsors.diamond)),
-        SliverToBoxAdapter(child: _SponsorTitle(text: '黃金贊助')),
-        centerGrid(context, _SponsorGrid(sponsors: state.sponsors.gold)),
-        SliverToBoxAdapter(child: _SponsorTitle(text: '白銀贊助')),
-        centerGrid(context, _SponsorGrid(sponsors: state.sponsors.silver)),
-        SliverToBoxAdapter(child: _SponsorTitle(text: '青銅贊助')),
-        centerGrid(context, _SponsorGrid(sponsors: state.sponsors.bronze)),
-      ];
+      var widgets = <Widget>[];
+      for (final section in state.sponsors.sections) {
+        final title =
+            SliverToBoxAdapter(child: _SponsorTitle(text: section.title));
+        final grid =
+            centerGrid(context, _SponsorGrid(sponsors: section.sponsors));
+        widgets.add(title);
+        widgets.add(grid);
+      }
+      return widgets;
     }
 
     return [SliverToBoxAdapter(child: Container())];
