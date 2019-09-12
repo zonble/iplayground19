@@ -65,15 +65,20 @@ class _FavoritePageState extends State<FavoritePage> {
               if (notificationState is NotificationBlocLoadedState) {
                 final saved = notificationState.sessions;
                 if (saved.isEmpty) {
-                  return SafeArea(child: Center(child: Text('您還沒有任何最愛的議程')));
+                  return SafeArea(
+                      child: Center(
+                          child: Text(
+                    '您還沒有任何最愛的議程',
+                    style: Theme.of(context).textTheme.title,
+                  )));
                 }
                 final all = dataState.sessions;
-                final filterd = all.keys
+                final filtered = all.keys
                     .where((x) => saved.contains(x))
                     .map((x) => all[x])
                     .cast<Session>()
                     .toList();
-                filterd.sort();
+                filtered.sort();
 
                 var slivers = <Widget>[];
                 slivers.add(SliverToBoxAdapter(
@@ -82,7 +87,7 @@ class _FavoritePageState extends State<FavoritePage> {
                 slivers.add(SliverList(
                     delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    final session = filterd[index];
+                    final session = filtered[index];
                     final id = session.proposalId.substring(5);
                     final program = dataState.programs[id];
                     final card = SessionCard(
@@ -92,7 +97,7 @@ class _FavoritePageState extends State<FavoritePage> {
                     );
                     return card;
                   },
-                  childCount: filterd.length,
+                  childCount: filtered.length,
                 )));
 
                 slivers.add(SliverToBoxAdapter(child: SizedBox(height: 30)));

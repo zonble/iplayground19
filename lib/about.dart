@@ -81,6 +81,7 @@ class _AboutPageState extends State<AboutPage> {
                     child:
                         SizedBox(height: MediaQuery.of(context).padding.top)),
               ]);
+
               return CustomScrollView(
                 slivers: slivers,
                 controller: widget.scrollController,
@@ -110,18 +111,14 @@ class _AboutPageState extends State<AboutPage> {
 
   makeCoOrganizersGrid(DataBlocState state) {
     if (state is DataBlocLoadingState) {
-      return [
-        SliverPadding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            sliver: SliverToBoxAdapter(child: CupertinoActivityIndicator()))
-      ];
+      return SliverPadding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          sliver: SliverToBoxAdapter(child: CupertinoActivityIndicator()));
     }
     if (state is DataBlocErrorState) {
-      return [
-        SliverPadding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            sliver: SliverToBoxAdapter(child: Text('資料載入失敗')))
-      ];
+      return SliverPadding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          sliver: SliverToBoxAdapter(child: Text('資料載入失敗')));
     }
 
     if (state is DataBlocLoadedState) {

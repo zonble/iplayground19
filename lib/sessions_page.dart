@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:iplayground19/bloc/data_bloc.dart';
 import 'package:iplayground19/components/session_card.dart';
 
@@ -23,15 +22,13 @@ class _SessionsPageState extends State<SessionsPage> {
   @override
   Widget build(BuildContext context) {
     final DataBloc bloc = BlocProvider.of(context);
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: Text("第 ${widget.day} 天 - 09/2${widget.day}"),
-      ),
-      child: BlocBuilder<DataBloc, DataBlocState>(
-        bloc: bloc,
-        builder: (context, state) {
-          if (state is DataBlocLoadingState) {
-            return SafeArea(
+    return BlocBuilder<DataBloc, DataBlocState>(
+      bloc: bloc,
+      builder: (context, state) {
+        if (state is DataBlocLoadingState) {
+          return CupertinoPageScaffold(
+            navigationBar: CupertinoNavigationBar(),
+            child: SafeArea(
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -42,11 +39,14 @@ class _SessionsPageState extends State<SessionsPage> {
                   ],
                 ),
               ),
-            );
-          }
+            ),
+          );
+        }
 
-          if (state is DataBlocErrorState) {
-            return SafeArea(
+        if (state is DataBlocErrorState) {
+          return CupertinoPageScaffold(
+            navigationBar: CupertinoNavigationBar(),
+            child: SafeArea(
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -61,72 +61,70 @@ class _SessionsPageState extends State<SessionsPage> {
                   ],
                 ),
               ),
-            );
+            ),
+          );
+        }
+
+        if (state is DataBlocLoadedState) {
+          List<Section> day;
+          if (widget.day == 1) {
+            day = state.day1;
+          } else if (widget.day == 2) {
+            day = state.day2;
+          } else {
+            return Container();
           }
 
-          if (state is DataBlocLoadedState) {
-            List<Section> day;
-            if (widget.day == 1) {
-              day = state.day1;
-            } else if (widget.day == 2) {
-              day = state.day2;
-            } else {
-              return Container();
-            }
+          var widgets = <Widget>[];
+          final list = SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final section = day[index];
+              var items = <Widget>[];
+              items.add(TimeSectionLabel(section: section));
+              for (final session in section.sessions) {
+                final id = session.proposalId.substring(5);
+                final program = state.programs[id];
+                final widget = SessionCard(
+                  session: session,
+                  program: program,
+                );
+                items.add(widget);
+              }
+              return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: items);
+            }, childCount: day.length),
+          );
 
-            var widgets = <Widget>[];
-            final list = SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final section = day[index];
-                var items = <Widget>[];
-                items.add(TimeSectionLabel(section: section));
-                for (final session in section.sessions) {
-                  final id = session.proposalId.substring(5);
-                  final program = state.programs[id];
-                  final widget = SessionCard(
-                    session: session,
-                    program: program,
-                  );
-                  items.add(widget);
-                }
-                return Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: items);
-              }, childCount: day.length),
-            );
-
-            widgets.addAll([
-              SliverPadding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top),
-                sliver: CupertinoSliverRefreshControl(
-                  refreshTriggerPullDistance: 100,
-                  onRefresh: () => Future.delayed(Duration(seconds: 0),
-                      () => bloc.dispatch(DataBlocEvent.refresh)),
-                ),
+          widgets.addAll([
+            CupertinoSliverNavigationBar(
+              largeTitle: Text("第 ${widget.day} 天 - 09/2${widget.day}"),
+            ),
+            CupertinoSliverRefreshControl(
+              refreshTriggerPullDistance: 100,
+              onRefresh: () => Future.delayed(Duration(seconds: 0),
+                  () => bloc.dispatch(DataBlocEvent.refresh)),
+            ),
+            list,
+            SliverToBoxAdapter(child: SizedBox(height: 30)),
+            SliverToBoxAdapter(
+                child: SizedBox(height: MediaQuery.of(context).padding.bottom)),
+          ]);
+          return Scaffold(
+            body: Scrollbar(
+              child: CustomScrollView(
+                slivers: widgets,
+                controller: widget.scrollController,
               ),
-              list,
-              SliverToBoxAdapter(child: SizedBox(height: 30)),
-              SliverToBoxAdapter(
-                  child:
-                      SizedBox(height: MediaQuery.of(context).padding.bottom)),
-            ]);
-            return Scaffold(
-              body: Scrollbar(
-                child: CustomScrollView(
-                  slivers: widgets,
-                  controller: widget.scrollController,
-                ),
-              ),
-            );
-          }
-          if (state is DataBlocInitialState) {
-            bloc.dispatch(DataBlocEvent.load);
-          }
-          return Container();
-        },
-      ),
+            ),
+          );
+        }
+        if (state is DataBlocInitialState) {
+          bloc.dispatch(DataBlocEvent.load);
+        }
+        return Container();
+      },
     );
   }
 }

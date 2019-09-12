@@ -208,7 +208,7 @@ class _SessionPageState extends State<SessionPage> {
         ]);
       }
 
-      final String twitter = widget.program.customFields['twitter_account'];
+      final String twitter = widget.program.customFields['SNS'];
       if (twitter != null && twitter.isNotEmpty) {
         final row = Row(
           children: <Widget>[
