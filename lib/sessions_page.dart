@@ -102,7 +102,7 @@ class _SessionsPageState extends State<SessionsPage> {
               largeTitle: Text("第 ${widget.day} 天 - 09/2${widget.day}"),
             ),
             CupertinoSliverRefreshControl(
-              refreshTriggerPullDistance: 100,
+              refreshTriggerPullDistance: 180,
               onRefresh: () => Future.delayed(Duration(seconds: 0),
                   () => bloc.dispatch(DataBlocEvent.refresh)),
             ),
