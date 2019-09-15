@@ -138,7 +138,7 @@ class _AboutPageState extends State<AboutPage> {
               width: constraints.maxWidth,
               height: constraints.maxHeight,
               decoration: BoxDecoration(
-                  image: DecorationImage(image: AssetImage(item.iconUrl))),
+                  image: DecorationImage(image: NetworkImage(item.iconUrl))),
             );
           });
         }, childCount: data.length),
