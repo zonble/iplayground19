@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Sponsor {
-  String name;
-  String imageUrl;
-  String description;
+  late String name;
+  late String imageUrl;
+  late String description;
 
   Sponsor(Map map) {
     name = map['name'];
@@ -13,7 +13,7 @@ class Sponsor {
     description = map['desc'];
   }
 
-  Map toJson() => {
+  Map<String, dynamic> toJson() => {
         'name': name,
         'picture': imageUrl,
         'desc': description,
@@ -21,8 +21,8 @@ class Sponsor {
 }
 
 class SponsorSection {
-  List<Sponsor> sponsors;
-  String title;
+  late List<Sponsor> sponsors;
+  late String title;
 
   SponsorSection(Map map) {
     title = map['title'];
@@ -30,18 +30,18 @@ class SponsorSection {
     sponsors = List<Sponsor>.from(list.cast<Map>().map((x) => Sponsor(x)));
   }
 
-  Map toJson() {
-    Map map = {};
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> map = {};
     map['title'] = title;
-    map['items'] = List<Map>.from(sponsors.map((x) => x.toJson()));
+    map['items'] = List<Map<String, dynamic>>.from(sponsors.map((x) => x.toJson()));
     return map;
   }
 }
 
 class Partner {
-  String name;
-  String iconUrl;
-  String link;
+  late String name;
+  late String iconUrl;
+  late String link;
 
   Partner(Map map) {
     name = map['name'];
@@ -49,7 +49,7 @@ class Partner {
     link = map['link'];
   }
 
-  Map toJson() => {
+  Map<String, dynamic> toJson() => {
         'name': name,
         'icon': iconUrl,
         'link': link,
@@ -57,8 +57,8 @@ class Partner {
 }
 
 class Sponsors {
-  List<SponsorSection> sections;
-  List<Partner> partners;
+  late List<SponsorSection> sections;
+  late List<Partner> partners;
 
   Sponsors(Map map) {
     List sponsorList = map['sponsors'];
@@ -67,21 +67,21 @@ class Sponsors {
     partners = List.from(partnerList.map((x) => Partner(x)));
   }
 
-  List<Map> convertSpeakersToList(List<Sponsor> list) =>
-      List<Map>.of(list.map((x) => x.toJson()));
+  List<Map<String, dynamic>> convertSpeakersToList(List<Sponsor> list) =>
+      List<Map<String, dynamic>>.of(list.map((x) => x.toJson()));
 
-  Map toJson() {
-    var map = Map();
-    map['sponsors'] = List<Map>.from(sections.map((x) => x.toJson()));
-    map['partner'] = List<Map>.from(partners.map((x) => x.toJson()));
+  Map<String, dynamic> toJson() {
+    var map = <String, dynamic>{};
+    map['sponsors'] = List<Map<String, dynamic>>.from(sections.map((x) => x.toJson()));
+    map['partner'] = List<Map<String, dynamic>>.from(partners.map((x) => x.toJson()));
     return map;
   }
 }
 
 /// Fetches sponsors and partners.
 Future<Sponsors> fetchSponsors() async {
-  final response = await http.get(
-      'https://raw.githubusercontent.com/iplayground/SessionData/2019/v2/sponsors.json');
+  final response = await http.get(Uri.parse(
+      'https://raw.githubusercontent.com/iplayground/SessionData/2019/v2/sponsors.json'));
   final map = json.decode(response.body);
   return Sponsors(map);
 }

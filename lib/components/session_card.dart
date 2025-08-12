@@ -19,11 +19,11 @@ class SessionCard extends StatelessWidget {
 
   /// Creates a new instance with [session] and [program].
   const SessionCard({
-    Key key,
-    @required this.session,
-    @required this.program,
+    super.key,
+    required this.session,
+    required this.program,
     this.showDetails = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => Center(
@@ -68,7 +68,7 @@ class SessionCard extends StatelessWidget {
                       RoomLabel(session: session),
                       SizedBox(height: 10),
                       Text(session.title,
-                          style: Theme.of(context).textTheme.title),
+                          style: Theme.of(context).textTheme.titleLarge),
                       SizedBox(height: 5),
                       Text(session.presenter, style: TextStyle(fontSize: 17.0)),
                       SizedBox(height: 20),
@@ -79,7 +79,7 @@ class SessionCard extends StatelessWidget {
                           ? Text('開始時間 ' + session.startTime)
                           : Container(),
                       Text('結束時間 ' + session.endTime,
-                          style: Theme.of(context).textTheme.body1),
+                          style: Theme.of(context).textTheme.bodyLarge),
                     ],
                   ),
                 ),

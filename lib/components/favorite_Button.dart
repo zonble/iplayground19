@@ -6,10 +6,10 @@ import 'package:iplayground19/bloc/notification.dart';
 
 class FavoriteButton extends StatelessWidget {
   const FavoriteButton({
-    Key key,
-    @required this.bloc,
-    @required this.session,
-  }) : super(key: key);
+    super.key,
+    required this.bloc,
+    required this.session,
+  });
 
   final NotificationBloc bloc;
   final Session session;
@@ -25,7 +25,7 @@ class FavoriteButton extends StatelessWidget {
                 color: Colors.red,
                 icon: Icon(Icons.favorite),
                 onPressed: () {
-                  bloc.dispatch(
+                  bloc.add(
                       NotificationBlocRemoveEvent("${session.sessionId}"));
                 },
               );
@@ -34,10 +34,10 @@ class FavoriteButton extends StatelessWidget {
                 color: Colors.red,
                 icon: Icon(Icons.favorite_border),
                 onPressed: () {
-                  bloc.dispatch(
+                  bloc.add(
                       NotificationBlocAddEvent("${session.sessionId}"));
                   final bar = SnackBar(content: Text('我們會在議程開始前通知您！'));
-                  Scaffold.of(context).showSnackBar(bar);
+                  ScaffoldMessenger.of(context).showSnackBar(bar);
                 },
               );
             }

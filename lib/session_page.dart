@@ -17,15 +17,14 @@ class OurMarkdown extends MarkdownWidget {
 
   /// Creates a scrolling widget that parses and displays Markdown.
   const OurMarkdown({
-    Key key,
-    String data,
-    MarkdownStyleSheet styleSheet,
-    SyntaxHighlighter syntaxHighlighter,
-    MarkdownTapLinkCallback onTapLink,
-    Directory imageDirectory,
-    this.padding: const EdgeInsets.all(16),
+    super.key,
+    required String data,
+    MarkdownStyleSheet? styleSheet,
+    SyntaxHighlighter? syntaxHighlighter,
+    MarkdownTapLinkCallback? onTapLink,
+    Directory? imageDirectory,
+    this.padding = const EdgeInsets.all(16),
   }) : super(
-          key: key,
           data: data,
           styleSheet: styleSheet,
           syntaxHighlighter: syntaxHighlighter,
@@ -41,13 +40,13 @@ class OurMarkdown extends MarkdownWidget {
 
 class SessionPage extends StatefulWidget {
   final Session session;
-  final Program program;
+  final Program? program;
 
-  SessionPage({
-    Key key,
-    this.session,
+  const SessionPage({
+    super.key,
+    required this.session,
     this.program,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _SessionPageState();
@@ -62,7 +61,7 @@ class _SessionPageState extends State<SessionPage> {
     }
     final urlPattern =
         r"(https?|ftp)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:,.;]*)?";
-    final regex = new RegExp(urlPattern, caseSensitive: false);
+    final regex = RegExp(urlPattern, caseSensitive: false);
     final matches = regex.allMatches(text);
     final links = matches.map((x) => text.substring(x.start, x.end));
     for (final link in links) {
@@ -145,11 +144,11 @@ class _SessionPageState extends State<SessionPage> {
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: OurMarkdown(
           data: text.trim(),
-          styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-              p: Theme.of(context).textTheme.body1.copyWith(fontSize: 17)),
-          onTapLink: (link) => launch(
-            link,
-            forceSafariVC: false,
+          style: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+              p: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 17)),
+          onTapLink: (text, href, title) => launch(
+            href!,
+            mode: LaunchMode.externalApplication,
           ),
         ),
       ),
@@ -189,20 +188,20 @@ class _SessionPageState extends State<SessionPage> {
             padding: const EdgeInsets.all(20),
             child: Text(
               speaker.name,
-              style: Theme.of(context).textTheme.title,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: OurMarkdown(
               data: speaker.biography.trim(),
-              styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
+              style: MarkdownStyleSheet.fromTheme(Theme.of(context))
                   .copyWith(
                       p: Theme.of(context)
                           .textTheme
-                          .body1
-                          .copyWith(fontSize: 17)),
-              onTapLink: (link) => launch(link),
+                          .bodyLarge
+                          ?.copyWith(fontSize: 17)),
+              onTapLink: (text, href, title) => launch(href!),
             ),
           )
         ]);
@@ -215,12 +214,12 @@ class _SessionPageState extends State<SessionPage> {
             Text('SNS:'),
             SizedBox(width: 10),
             Flexible(
-              child: FlatButton(
+              child: TextButton(
                   child: Text(twitter,
                       style: TextStyle(color: Theme.of(context).primaryColor)),
                   onPressed: () => launch(
                         twitter,
-                        forceSafariVC: false,
+                        mode: LaunchMode.externalApplication,
                       )),
             ),
           ],
@@ -258,7 +257,7 @@ class _SessionPageState extends State<SessionPage> {
     );
   }
 
-  String imageName;
+  String? imageName;
 
   detectHasImage() async {
     var name = 'images/a_' +

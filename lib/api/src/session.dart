@@ -3,16 +3,16 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Session implements Comparable<Session> {
-  int conferenceDay;
-  String startTime;
-  String endTime;
-  int sessionId;
-  String proposalId;
-  String title;
-  String presenter;
-  String roomName;
-  String trackName;
-  String description;
+  late int conferenceDay;
+  late String startTime;
+  late String endTime;
+  late int sessionId;
+  late String proposalId;
+  late String title;
+  late String presenter;
+  late String roomName;
+  late String trackName;
+  late String description;
 
   Session(Map map) {
     conferenceDay = map['conference_day'] ?? 0;
@@ -27,8 +27,8 @@ class Session implements Comparable<Session> {
     description = map['desc'] ?? '';
   }
 
-  Map toJson() {
-    var map = Map();
+  Map<String, dynamic> toJson() {
+    var map = <String, dynamic>{};
     map['conference_day'] = conferenceDay;
     map['start_time'] = startTime;
     map['end_time'] = endTime;
@@ -59,8 +59,8 @@ class Session implements Comparable<Session> {
 
 /// Fetches sessions.
 Future<List<Session>> fetchSessions() async {
-  final response = await http.get(
-      'https://raw.githubusercontent.com/iplayground/SessionData/2019/v2/sessions.json');
+  final response = await http.get(Uri.parse(
+      'https://raw.githubusercontent.com/iplayground/SessionData/2019/v2/sessions.json'));
   final map = json.decode(response.body);
   List list = map['sessions'];
   return List.from(list.cast<Map>().map((x) => (Session(x))));

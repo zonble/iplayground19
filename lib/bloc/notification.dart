@@ -31,7 +31,7 @@ class NotificationBlocState {}
 class NotificationBlocInitialState extends NotificationBlocState {}
 
 class NotificationBlocLoadedState extends NotificationBlocState {
-  List<String> sessions;
+  final List<String> sessions;
 
   NotificationBlocLoadedState(this.sessions);
 
@@ -40,13 +40,35 @@ class NotificationBlocLoadedState extends NotificationBlocState {
 
 class NotificationBloc
     extends Bloc<NotificationBlocEvent, NotificationBlocState> {
-  DataBloc dataBloc;
-  NotificationHelper helper;
+  final DataBloc? dataBloc;
+  NotificationHelper? helper;
 
-  NotificationBloc({this.dataBloc});
+  NotificationBloc({this.dataBloc}) : super(NotificationBlocInitialState()) {
+    on<NotificationBlocEvent>((event, emit) async {
+      if (event is NotificationBlocLoadEvent) {
+        final sessions = await _loadSessions();
+        emit(NotificationBlocLoadedState(sessions));
+      }
 
-  @override
-  NotificationBlocState get initialState => NotificationBlocInitialState();
+      if (event is NotificationBlocAddEvent) {
+        var sessions = await _getSessions();
+        sessions.add(event.sessionId);
+        final state = NotificationBlocLoadedState(sessions);
+        emit(state);
+        await _saveSessions();
+        await _scheduleNotifications();
+      }
+
+      if (event is NotificationBlocRemoveEvent) {
+        var sessions = await _getSessions();
+        sessions.remove(event.sessionId);
+        final state = NotificationBlocLoadedState(sessions);
+        emit(state);
+        await _saveSessions();
+        await _scheduleNotifications();
+      }
+    });
+  }
 
   Future<List<String>> _loadSessions() async {
     final instance = await SharedPreferences.getInstance();
@@ -57,27 +79,27 @@ class NotificationBloc
     if (dataBloc == null) {
       return;
     }
-    final dataState = dataBloc.currentState;
-    final notificationState = this.currentState;
+    final dataState = dataBloc!.state;
+    final notificationState = this.state;
     if (dataState is DataBlocLoadedState &&
         notificationState is NotificationBlocLoadedState) {
       if (helper == null) {
         helper = NotificationHelper();
       }
-      helper.cancelAll();
+      helper!.cancelAll();
 
       final sessions = dataState.sessions;
       final savedSessions = notificationState.sessions;
       for (final sessionId in savedSessions) {
         final session = sessions[sessionId];
         if (session == null) continue;
-        helper.scheduleNotification(session);
+        helper!.scheduleNotification(session);
       }
     }
   }
 
   Future<void> _saveSessions() async {
-    final state = this.currentState;
+    final state = this.state;
     if (state is NotificationBlocLoadedState) {
       final instance = await SharedPreferences.getInstance();
       instance.setStringList("notifications", state.sessions);
@@ -85,58 +107,29 @@ class NotificationBloc
   }
 
   Future<List<String>> _getSessions() async {
-    final state = currentState;
-    return state is NotificationBlocLoadedState
-        ? state.sessions
+    final currentState = state;
+    return currentState is NotificationBlocLoadedState
+        ? currentState.sessions
         : await _loadSessions();
-  }
-
-  @override
-  Stream<NotificationBlocState> mapEventToState(
-      NotificationBlocEvent event) async* {
-    if (event is NotificationBlocLoadEvent) {
-      final sessions = await _loadSessions();
-      yield NotificationBlocLoadedState(sessions);
-    }
-
-    if (event is NotificationBlocAddEvent) {
-      var sessions = await _getSessions();
-      sessions.add(event.sessionId);
-      final state = NotificationBlocLoadedState(sessions);
-      yield state;
-      await _saveSessions();
-      await _scheduleNotifications();
-    }
-
-    if (event is NotificationBlocRemoveEvent) {
-      var sessions = await _getSessions();
-      sessions.remove(event.sessionId);
-      final state = NotificationBlocLoadedState(sessions);
-      yield state;
-      await _saveSessions();
-      await _scheduleNotifications();
-    }
   }
 }
 
 class NotificationHelper {
-  FlutterLocalNotificationsPlugin _plugin;
+  FlutterLocalNotificationsPlugin? _plugin;
 
   NotificationHelper() {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
-    var initializationSettingsAndroid =
+    const initializationSettingsAndroid =
         AndroidInitializationSettings('app_icon');
-    var initializationSettingsIOS = new IOSInitializationSettings(
+    const initializationSettingsIOS = DarwinInitializationSettings(
         onDidReceiveLocalNotification:
-            (int id, String title, String body, String payload) {
-      return null;
-    });
-    var initializationSettings = new InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
+            null);
+    const initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (payload) {
-      return null;
+        onDidReceiveNotificationResponse: (details) {
+      return;
     });
     _plugin = flutterLocalNotificationsPlugin;
   }
@@ -159,24 +152,24 @@ class NotificationHelper {
   }
 
   void cancelAll() {
-    _plugin.cancelAll();
+    _plugin?.cancelAll();
   }
 
   void scheduleNotification(Session session) async {
     var scheduledNotificationDateTime = getSessionTime(session);
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+    const androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'notifications',
       'Notifications',
-      'Notifications from iPlayground',
+      channelDescription: 'Notifications from iPlayground',
     );
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    NotificationDetails platformChannelSpecifics = new NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    const iOSPlatformChannelSpecifics = DarwinNotificationDetails();
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
 
     var title = session.title;
     var body = "議程將在 ${session.startTime} 於 ${session.roomName} 開始";
 
-    await _plugin.schedule(
+    await _plugin?.schedule(
       0,
       title,
       body,

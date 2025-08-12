@@ -6,13 +6,13 @@ import 'package:iplayground19/components/session_card.dart';
 
 class SessionsPage extends StatefulWidget {
   final int day;
-  final ScrollController scrollController;
+  final ScrollController? scrollController;
 
-  SessionsPage({
-    Key key,
-    this.day,
+  const SessionsPage({
+    super.key,
+    required this.day,
     this.scrollController,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _SessionsPageState();
@@ -55,7 +55,7 @@ class _SessionsPageState extends State<SessionsPage> {
                     CupertinoButton(
                       child: Text('重試'),
                       onPressed: () {
-                        bloc.dispatch(DataBlocEvent.load);
+                        bloc.add(DataBlocEvent.load);
                       },
                     ),
                   ],
@@ -104,7 +104,7 @@ class _SessionsPageState extends State<SessionsPage> {
             CupertinoSliverRefreshControl(
               refreshTriggerPullDistance: 180,
               onRefresh: () => Future.delayed(Duration(seconds: 0),
-                  () => bloc.dispatch(DataBlocEvent.refresh)),
+                  () => bloc.add(DataBlocEvent.refresh)),
             ),
             list,
             SliverToBoxAdapter(child: SizedBox(height: 30)),
@@ -121,7 +121,7 @@ class _SessionsPageState extends State<SessionsPage> {
           );
         }
         if (state is DataBlocInitialState) {
-          bloc.dispatch(DataBlocEvent.load);
+          bloc.add(DataBlocEvent.load);
         }
         return Container();
       },
@@ -131,9 +131,9 @@ class _SessionsPageState extends State<SessionsPage> {
 
 class TimeSectionLabel extends StatelessWidget {
   const TimeSectionLabel({
-    Key key,
-    @required this.section,
-  }) : super(key: key);
+    super.key,
+    required this.section,
+  });
 
   final Section section;
 
@@ -152,7 +152,7 @@ class TimeSectionLabel extends StatelessWidget {
                 width: double.infinity,
                 child: Text(
                   section.title,
-                  style: Theme.of(context).textTheme.display1,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 )),
           ),
         ),

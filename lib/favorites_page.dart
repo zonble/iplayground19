@@ -7,9 +7,9 @@ import 'package:iplayground19/bloc/notification.dart';
 import 'package:iplayground19/components/session_card.dart';
 
 class FavoritePage extends StatefulWidget {
-  final ScrollController scrollController;
+  final ScrollController? scrollController;
 
-  FavoritePage({Key key, this.scrollController}) : super(key: key);
+  const FavoritePage({super.key, this.scrollController});
 
   @override
   State<StatefulWidget> createState() => _FavoritePageState();
@@ -49,7 +49,7 @@ class _FavoritePageState extends State<FavoritePage> {
                   CupertinoButton(
                     child: Text('重試'),
                     onPressed: () {
-                      dataBloc.dispatch(DataBlocEvent.load);
+                      dataBloc.add(DataBlocEvent.load);
                     },
                   ),
                 ],
@@ -69,7 +69,7 @@ class _FavoritePageState extends State<FavoritePage> {
                       child: Center(
                           child: Text(
                     '您還沒有任何最愛的議程',
-                    style: Theme.of(context).textTheme.title,
+                    style: Theme.of(context).textTheme.titleLarge,
                   )));
                 }
                 final all = dataState.sessions;

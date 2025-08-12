@@ -5,10 +5,10 @@ import 'package:http/http.dart' as http;
 /// Represents speakers.
 class Speaker {
   /// Name of the speaker.
-  String name;
+  late String name;
 
   /// Biography of the speaker.
-  String biography;
+  late String biography;
 
   /// Creates a new instance.
   Speaker(Map map) {
@@ -17,22 +17,22 @@ class Speaker {
   }
 
   /// Converts to JSON.
-  Map toJson() => {
+  Map<String, dynamic> toJson() => {
         'name': name,
         'bio': biography,
       };
 }
 
 class Program {
-  String title;
-  String abstract;
-  List<String> reviewTags;
-  int id;
-  String track;
-  String videoUrl;
-  String slideUrl;
-  var customFields;
-  List<Speaker> speakers;
+  late String title;
+  late String abstract;
+  late List<String> reviewTags;
+  late int id;
+  late String track;
+  late String videoUrl;
+  late String slideUrl;
+  late dynamic customFields;
+  late List<Speaker> speakers;
 
   Program(Map map) {
     title = map['title'];
@@ -47,8 +47,8 @@ class Program {
     speakers = List<Speaker>.from(speakerMapList.map((x) => Speaker(x)));
   }
 
-  Map toJson() {
-    var map = Map();
+  Map<String, dynamic> toJson() {
+    var map = <String, dynamic>{};
     map['title'] = title;
     map['abstract'] = abstract;
     map['review_tags'] = reviewTags;
@@ -57,15 +57,15 @@ class Program {
     map['video_url'] = videoUrl;
     map['slides_url'] = slideUrl;
     map['custom_fields'] = customFields;
-    map['speakers'] = List<Map>.from(speakers.map((x) => x.toJson()));
+    map['speakers'] = List<Map<String, dynamic>>.from(speakers.map((x) => x.toJson()));
     return map;
   }
 }
 
 /// Fetches programs.
 Future<List<Program>> fetchPrograms() async {
-  final response = await http.get(
-      'https://raw.githubusercontent.com/iplayground/SessionData/2019/v2/program.json');
+  final response = await http.get(Uri.parse(
+      'https://raw.githubusercontent.com/iplayground/SessionData/2019/v2/program.json'));
   final map = json.decode(response.body);
   List list = map['program'];
   return List.from(list.cast<Map>().map((x) => (Program(x))));

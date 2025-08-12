@@ -7,9 +7,9 @@ class RoomLabel extends StatelessWidget {
   final Session session;
 
   const RoomLabel({
-    Key key,
-    @required this.session,
-  }) : super(key: key);
+    super.key,
+    required this.session,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class RoomLabel extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(3.0),
           child: Text(session.roomName,
-              style: Theme.of(context).textTheme.caption.copyWith(
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: color,
                     fontWeight: FontWeight.bold,
                   )),

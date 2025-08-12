@@ -24,9 +24,9 @@ centerGrid(context, Widget grid) {
 }
 
 class AboutPage extends StatefulWidget {
-  final ScrollController scrollController;
+  final ScrollController? scrollController;
 
-  AboutPage({Key key, this.scrollController}) : super(key: key);
+  const AboutPage({super.key, this.scrollController});
 
   @override
   State<StatefulWidget> createState() => _AboutPageState();
@@ -131,7 +131,7 @@ class _AboutPageState extends State<AboutPage> {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () => launch(item.link),
+                  onTap: () => launch(Uri.parse(item.link)),
                   child: Container(),
                 ),
               ),
@@ -203,7 +203,7 @@ class _AboutPageState extends State<AboutPage> {
                       onTap: () {
                         var link = item[3];
                         if (link != null) {
-                          launch(link, forceSafariVC: false);
+                          launch(Uri.parse(link), mode: LaunchMode.externalApplication);
                         }
                       },
                     ),
@@ -239,8 +239,8 @@ class _AboutPageState extends State<AboutPage> {
             onPressed: () {
               var url = 'https://tinyurl.com/y4h9ja9y';
               launch(
-                url,
-                forceSafariVC: false,
+                Uri.parse(url),
+                mode: LaunchMode.externalApplication,
               );
             },
           )
@@ -258,7 +258,7 @@ class _AboutPageState extends State<AboutPage> {
 class _AboutSectionTitle extends StatelessWidget {
   final String text;
 
-  const _AboutSectionTitle({Key key, this.text}) : super(key: key);
+  const _AboutSectionTitle({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -267,7 +267,7 @@ class _AboutSectionTitle extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(text, style: Theme.of(context).textTheme.display1),
+          Text(text, style: Theme.of(context).textTheme.headlineMedium),
           Divider(color: Colors.grey),
         ],
       ),
@@ -279,9 +279,9 @@ class _SponsorGrid extends StatelessWidget {
   final List<Sponsor> sponsors;
 
   const _SponsorGrid({
-    Key key,
-    @required this.sponsors,
-  }) : super(key: key);
+    super.key,
+    required this.sponsors,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -320,9 +320,9 @@ class _SponsorTitle extends StatelessWidget {
   final String text;
 
   const _SponsorTitle({
-    Key key,
-    @required this.text,
-  }) : super(key: key);
+    super.key,
+    required this.text,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -330,7 +330,7 @@ class _SponsorTitle extends StatelessWidget {
       width: double.infinity,
       child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: Text(text, style: Theme.of(context).textTheme.title)),
+          child: Text(text, style: Theme.of(context).textTheme.titleLarge)),
     ));
   }
 }
