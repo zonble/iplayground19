@@ -6,35 +6,35 @@ import 'package:iplayground19/api/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Cache {
-  Sponsors sponsors;
-  List<Program> programs;
-  List<Session> sessions;
+  final Sponsors sponsors;
+  final List<Program> programs;
+  final List<Session> sessions;
 
   Cache({
-    @required this.sponsors,
-    @required this.programs,
-    @required this.sessions,
+    required this.sponsors,
+    required this.programs,
+    required this.sessions,
   });
 }
 
 class CacheRepository {
-  Future<Cache> load() async {
+  Future<Cache?> load() async {
     final instance = await SharedPreferences.getInstance();
-    Sponsors sponsors = () {
+    Sponsors? sponsors = () {
       final sponsorsJson = instance.getString('sponsors_v2');
       if (sponsorsJson == null) return null;
       final Map sponsorsMap = json.decode(sponsorsJson);
       return Sponsors(sponsorsMap);
     }();
 
-    List<Program> programs = () {
+    List<Program>? programs = () {
       final programsJson = instance.getString('programs_v2');
       if (programsJson == null) return null;
       final List programMapList = json.decode(programsJson);
       return List<Program>.from(programMapList.map((x) => Program(x)));
     }();
 
-    List<Session> sessions = () {
+    List<Session>? sessions = () {
       final sessionsJson = instance.getString('sessions_v2');
       if (sessionsJson == null) return null;
       final List sessionsMapList = json.decode(sessionsJson);
@@ -70,92 +70,90 @@ class DataBlocInitialState extends DataBlocState {}
 class DataBlocLoadingState extends DataBlocState {}
 
 class DataBlocLoadedState extends DataBlocState {
-  Sponsors sponsors;
-  Map<String, Session> sessions;
-  Map<String, Program> programs;
-  List<Section> day1;
-  List<Section> day2;
+  final Sponsors sponsors;
+  final Map<String, Session> sessions;
+  final Map<String, Program> programs;
+  final List<Section> day1;
+  final List<Section> day2;
 
   DataBlocLoadedState({
-    @required this.sponsors,
-    @required this.sessions,
-    @required this.programs,
-    @required this.day1,
-    @required this.day2,
+    required this.sponsors,
+    required this.sessions,
+    required this.programs,
+    required this.day1,
+    required this.day2,
   });
 }
 
 class DataBlocErrorState extends DataBlocState {
-  var error;
+  final dynamic error;
 
   DataBlocErrorState(this.error);
 }
 
 class Section {
-  String title;
-  List<Session> sessions;
+  final String title;
+  final List<Session> sessions;
 
   Section({
-    @required this.title,
-    @required this.sessions,
+    required this.title,
+    required this.sessions,
   });
 }
 
 class DataBloc extends Bloc<DataBlocEvent, DataBlocState> {
-  CacheRepository cacheRepo = CacheRepository();
+  final CacheRepository cacheRepo = CacheRepository();
 
-  @override
-  DataBlocState get initialState => DataBlocInitialState();
-
-  @override
-  Stream<DataBlocState> mapEventToState(DataBlocEvent event) async* {
-    if (currentState is DataBlocLoadingState) {
-      return;
-    }
-
-    if (currentState is DataBlocLoadedState && event == DataBlocEvent.load) {
-      return;
-    }
-
-    try {
-      if (event == DataBlocEvent.load) {
-        Cache cache = await cacheRepo.load();
-        if (cache != null) {
-          final sponsors = cache.sponsors;
-          final programs = cache.programs;
-          final sessions = cache.sessions;
-          yield generateState(
-            sessions: sessions,
-            programs: programs,
-            sponsors: sponsors,
-          );
-          return;
-        }
-      }
-
-      yield DataBlocLoadingState();
-
-      final sponsors = await fetchSponsors();
-      final programs = await fetchPrograms();
-      final sessions = await fetchSessions();
-      yield generateState(
-        sessions: sessions,
-        programs: programs,
-        sponsors: sponsors,
-      );
-      cacheRepo.save(
-          Cache(sponsors: sponsors, programs: programs, sessions: sessions));
-    } catch (e) {
-      print(e);
-      if (currentState is DataBlocLoadedState) {
+  DataBloc() : super(DataBlocInitialState()) {
+    on<DataBlocEvent>((event, emit) async {
+      if (state is DataBlocLoadingState) {
         return;
       }
-      yield DataBlocErrorState(e);
-    }
+
+      if (state is DataBlocLoadedState && event == DataBlocEvent.load) {
+        return;
+      }
+
+      try {
+        if (event == DataBlocEvent.load) {
+          Cache? cache = await cacheRepo.load();
+          if (cache != null) {
+            final sponsors = cache.sponsors;
+            final programs = cache.programs;
+            final sessions = cache.sessions;
+            emit(generateState(
+              sessions: sessions,
+              programs: programs,
+              sponsors: sponsors,
+            ));
+            return;
+          }
+        }
+
+        emit(DataBlocLoadingState());
+
+        final sponsors = await fetchSponsors();
+        final programs = await fetchPrograms();
+        final sessions = await fetchSessions();
+        emit(generateState(
+          sessions: sessions,
+          programs: programs,
+          sponsors: sponsors,
+        ));
+        cacheRepo.save(
+            Cache(sponsors: sponsors, programs: programs, sessions: sessions));
+      } catch (e) {
+        print(e);
+        if (state is DataBlocLoadedState) {
+          return;
+        }
+        emit(DataBlocErrorState(e));
+      }
+    });
   }
 
   DataBlocLoadedState generateState(
-      {List<Session> sessions, List<Program> programs, Sponsors sponsors}) {
+      {required List<Session> sessions, required List<Program> programs, required Sponsors sponsors}) {
     Map<String, Session> sessionMap = reshapeSessions(sessions);
     Map<String, Program> programMap = reshapePrograms(programs);
     List<List<Section>> days = reshapeSessionsToDays(sessions);

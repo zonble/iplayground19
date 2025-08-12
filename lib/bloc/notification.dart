@@ -11,7 +11,7 @@ class NotificationBlocLoadEvent extends NotificationBlocEvent {}
 /// Adds a notification for the given session.
 class NotificationBlocAddEvent extends NotificationBlocEvent {
   /// The ID of the desired session.
-  String sessionId;
+  final String sessionId;
 
   /// Creates a new instance.
   NotificationBlocAddEvent(this.sessionId);
@@ -20,7 +20,7 @@ class NotificationBlocAddEvent extends NotificationBlocEvent {
 /// Remove a notification for the given session.
 class NotificationBlocRemoveEvent extends NotificationBlocEvent {
   /// The ID of the desired session.
-  String sessionId;
+  final String sessionId;
 
   /// Creates a new instance.
   NotificationBlocRemoveEvent(this.sessionId);

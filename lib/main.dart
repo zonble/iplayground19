@@ -17,15 +17,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  DataBloc dataBloc;
-  NotificationBloc notificationBloc;
+  late DataBloc dataBloc;
+  late NotificationBloc notificationBloc;
 
   @override
   void initState() {
     super.initState();
     dataBloc = DataBloc();
     notificationBloc = NotificationBloc(dataBloc: dataBloc);
-    notificationBloc.dispatch(NotificationBlocLoadEvent());
+    notificationBloc.add(NotificationBlocLoadEvent());
   }
 
   @override
@@ -39,8 +39,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<DataBloc>(builder: (context) => dataBloc),
-        BlocProvider<NotificationBloc>(builder: (context) => notificationBloc),
+        BlocProvider<DataBloc>(create: (context) => dataBloc),
+        BlocProvider<NotificationBloc>(create: (context) => notificationBloc),
       ],
       child: CupertinoApp(
         title: 'iPlayground 19',
@@ -49,14 +49,14 @@ class _MyAppState extends State<MyApp> {
         ),
         home: Theme(
             data: ThemeData(splashColor: Colors.transparent),
-            child: MyHomePage()),
+            child: const MyHomePage()),
       ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+  const MyHomePage({super.key});
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
