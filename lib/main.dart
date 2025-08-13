@@ -71,30 +71,32 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        final currentState = keys[currentIndex].currentState;
-        await currentState.maybePop();
-        return false;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop) {
+          final currentState = keys[currentIndex].currentState;
+          await currentState?.maybePop();
+        }
       },
       child: CupertinoTabScaffold(
         tabBar: CupertinoTabBar(
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.schedule, size: 24),
-              title: Text("第 1 天"),
+              label: "第 1 天",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.schedule, size: 24),
-              title: Text("第 2 天"),
+              label: "第 2 天",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.favorite, size: 24),
-              title: Text("我的最愛"),
+              label: "我的最愛",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.info, size: 24),
-              title: Text("關於"),
+              label: "關於",
             ),
           ],
           onTap: (index) {

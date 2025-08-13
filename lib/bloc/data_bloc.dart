@@ -170,12 +170,14 @@ class DataBloc extends Bloc<DataBlocEvent, DataBlocState> {
     List<Section> sections = [];
     for (final key in dayMap.keys) {
       var sessions = dayMap[key];
-      sessions.sort((a, b) => a.roomName.compareTo(b.roomName));
-      final section = Section(
-        title: key,
-        sessions: dayMap[key],
-      );
-      sections.add(section);
+      if (sessions != null) {
+        sessions.sort((a, b) => a.roomName.compareTo(b.roomName));
+        final section = Section(
+          title: key,
+          sessions: sessions,
+        );
+        sections.add(section);
+      }
     }
     sections.sort((a, b) => a.title.compareTo(b.title));
     return sections;
@@ -189,7 +191,7 @@ class DataBloc extends Bloc<DataBlocEvent, DataBlocState> {
       final startTime = session.startTime;
       final day = session.conferenceDay;
       if (day == 1) {
-        List<Session> list = day1Map[startTime];
+        List<Session>? list = day1Map[startTime];
         if (list == null) {
           list = [session];
           day1Map[startTime] = list;
@@ -197,7 +199,7 @@ class DataBloc extends Bloc<DataBlocEvent, DataBlocState> {
           list.add(session);
         }
       } else if (day == 2) {
-        List<Session> list = day2Map[startTime];
+        List<Session>? list = day2Map[startTime];
         if (list == null) {
           list = [session];
           day2Map[startTime] = list;
