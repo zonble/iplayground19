@@ -19,14 +19,14 @@ class OurMarkdown extends MarkdownWidget {
   const OurMarkdown({
     super.key,
     required String data,
-    MarkdownStyleSheet? styleSheet,
+    MarkdownStyleSheet? style,
     SyntaxHighlighter? syntaxHighlighter,
     MarkdownTapLinkCallback? onTapLink,
     Directory? imageDirectory,
     this.padding = const EdgeInsets.all(16),
   }) : super(
           data: data,
-          styleSheet: styleSheet,
+          style: style,
           syntaxHighlighter: syntaxHighlighter,
           onTapLink: onTapLink,
           imageDirectory: imageDirectory,
@@ -146,8 +146,8 @@ class _SessionPageState extends State<SessionPage> {
           data: text.trim(),
           style: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
               p: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 17)),
-          onTapLink: (text, href, title) => launch(
-            href!,
+          onTapLink: (text, href, title) => launchUrl(
+            Uri.parse(href!),
             mode: LaunchMode.externalApplication,
           ),
         ),
@@ -201,7 +201,7 @@ class _SessionPageState extends State<SessionPage> {
                           .textTheme
                           .bodyLarge
                           ?.copyWith(fontSize: 17)),
-              onTapLink: (text, href, title) => launch(href!),
+              onTapLink: (text, href, title) => launchUrl(Uri.parse(href!)),
             ),
           )
         ]);
@@ -217,8 +217,8 @@ class _SessionPageState extends State<SessionPage> {
               child: TextButton(
                   child: Text(twitter,
                       style: TextStyle(color: Theme.of(context).primaryColor)),
-                  onPressed: () => launch(
-                        twitter,
+                  onPressed: () => launchUrl(
+                        Uri.parse(twitter),
                         mode: LaunchMode.externalApplication,
                       )),
             ),

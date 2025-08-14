@@ -131,7 +131,7 @@ class _AboutPageState extends State<AboutPage> {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () => launch(Uri.parse(item.link)),
+                  onTap: () => launchUrl(Uri.parse(item.link)),
                   child: Container(),
                 ),
               ),
@@ -203,7 +203,7 @@ class _AboutPageState extends State<AboutPage> {
                       onTap: () {
                         var link = item[3];
                         if (link != null) {
-                          launch(Uri.parse(link), mode: LaunchMode.externalApplication);
+                          launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
                         }
                       },
                     ),
@@ -238,7 +238,7 @@ class _AboutPageState extends State<AboutPage> {
             child: Text('地圖 >'),
             onPressed: () {
               var url = 'https://tinyurl.com/y4h9ja9y';
-              launch(
+              launchUrl(
                 Uri.parse(url),
                 mode: LaunchMode.externalApplication,
               );
