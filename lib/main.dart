@@ -3,13 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iplayground19/favorites_page.dart';
 import 'package:iplayground19/sessions_page.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 import 'package:iplayground19/about.dart';
 import 'package:iplayground19/bloc/data_bloc.dart';
 
 import 'bloc/notification.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  tz.initializeTimeZones();
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -30,8 +34,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    dataBloc.dispose();
-    notificationBloc.dispose();
+    dataBloc.close();
+    notificationBloc.close();
     super.dispose();
   }
 

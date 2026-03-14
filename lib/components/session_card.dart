@@ -13,7 +13,7 @@ class SessionCard extends StatelessWidget {
   final Session session;
 
   /// [Program] used in the card.
-  final Program program;
+  final Program? program;
 
   final bool showDetails;
 

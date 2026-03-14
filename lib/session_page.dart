@@ -131,7 +131,7 @@ class _SessionPageState extends State<SessionPage> {
 
     widgets.addAll(title);
 
-    if (widget.program.reviewTags.contains('workshop')) {
+    if (widget.program?.reviewTags.contains('workshop') == true) {
       widgets.add(Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: Text('workshop'),
@@ -175,14 +175,14 @@ class _SessionPageState extends State<SessionPage> {
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: ClipOval(
-                  child: Image.asset(imageName),
+                  child: Image.asset(imageName!),
                 ),
               ),
             ));
         widgets.add(image);
       }
 
-      for (final speaker in widget.program.speakers) {
+      for (final speaker in widget.program!.speakers) {
         widgets.addAll([
           Padding(
             padding: const EdgeInsets.all(20),
@@ -207,7 +207,7 @@ class _SessionPageState extends State<SessionPage> {
         ]);
       }
 
-      final String twitter = widget.program.customFields['SNS'];
+      final String? twitter = widget.program!.customFields['SNS'] as String?;
       if (twitter != null && twitter.isNotEmpty) {
         final row = Row(
           children: <Widget>[

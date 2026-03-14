@@ -3,6 +3,7 @@ import 'package:iplayground19/api/api.dart';
 import 'package:iplayground19/bloc/data_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class NotificationBlocEvent {}
 
@@ -122,9 +123,7 @@ class NotificationHelper {
         FlutterLocalNotificationsPlugin();
     const initializationSettingsAndroid =
         AndroidInitializationSettings('app_icon');
-    const initializationSettingsIOS = DarwinInitializationSettings(
-        onDidReceiveLocalNotification:
-            null);
+    const initializationSettingsIOS = DarwinInitializationSettings();
     const initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
@@ -169,12 +168,15 @@ class NotificationHelper {
     var title = session.title;
     var body = "議程將在 ${session.startTime} 於 ${session.roomName} 開始";
 
-    await _plugin?.schedule(
+    await _plugin?.zonedSchedule(
       0,
       title,
       body,
-      scheduledNotificationDateTime,
+      tz.TZDateTime.from(scheduledNotificationDateTime, tz.local),
       platformChannelSpecifics,
+      // Use exactAllowWhileIdle to ensure notifications fire on time even
+      // when the device is in Doze mode.
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
 }
