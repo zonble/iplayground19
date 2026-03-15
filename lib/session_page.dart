@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:html2md/html2md.dart' as html2md;
 import 'package:iplayground19/api/api.dart';
 import 'package:iplayground19/bloc/notification.dart';
 import 'package:iplayground19/components/favorite_Button.dart';
@@ -57,7 +56,7 @@ class _SessionPageState extends State<SessionPage> {
   Widget build(BuildContext context) {
     var text = widget.session.description;
     if (text.contains('<p>') || text.contains('<h4>')) {
-      text = html2md.convert(text);
+      text = _htmlToMarkdown(text);
     }
     final urlPattern =
         r"(https?|ftp)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:,.;]*)?";
@@ -258,6 +257,37 @@ class _SessionPageState extends State<SessionPage> {
   }
 
   String? imageName;
+
+  /// Converts a subset of HTML tags to Markdown, replacing the html2md package
+  /// which is not compatible with Dart 3.
+  static String _htmlToMarkdown(String html) {
+    return html
+        .replaceAllMapped(
+            RegExp(r'<h[1-6][^>]*>(.*?)</h[1-6]>', dotAll: true),
+            (m) => '## ${m[1]}\n')
+        .replaceAllMapped(RegExp(r'<strong[^>]*>(.*?)</strong>', dotAll: true),
+            (m) => '**${m[1]}**')
+        .replaceAllMapped(
+            RegExp(r'<b[^>]*>(.*?)</b>', dotAll: true), (m) => '**${m[1]}**')
+        .replaceAllMapped(
+            RegExp(r'<em[^>]*>(.*?)</em>', dotAll: true), (m) => '_${m[1]}_')
+        .replaceAllMapped(
+            RegExp(r'<i[^>]*>(.*?)</i>', dotAll: true), (m) => '_${m[1]}_')
+        .replaceAllMapped(
+            RegExp(r'<a[^>]*href="([^"]*)"[^>]*>(.*?)</a>', dotAll: true),
+            (m) => '[${m[2]}](${m[1]})')
+        .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
+        .replaceAll(RegExp(r'<p[^>]*>'), '')
+        .replaceAll('</p>', '\n\n')
+        .replaceAll(RegExp(r'<[^>]+>'), '')
+        .replaceAll('&lt;', '<')
+        .replaceAll('&gt;', '>')
+        .replaceAll('&amp;', '&')
+        .replaceAll('&nbsp;', ' ')
+        .replaceAll('&quot;', '"')
+        .replaceAll(RegExp(r'\n{3,}'), '\n\n')
+        .trim();
+  }
 
   detectHasImage() async {
     var name = 'images/a_' +

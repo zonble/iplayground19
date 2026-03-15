@@ -126,7 +126,8 @@ class NotificationHelper {
     const initializationSettingsIOS = DarwinInitializationSettings();
     const initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+    flutterLocalNotificationsPlugin.initialize(
+        settings: initializationSettings,
         onDidReceiveNotificationResponse: (details) {
       return;
     });
@@ -169,11 +170,11 @@ class NotificationHelper {
     var body = "議程將在 ${session.startTime} 於 ${session.roomName} 開始";
 
     await _plugin?.zonedSchedule(
-      0,
-      title,
-      body,
-      tz.TZDateTime.from(scheduledNotificationDateTime, tz.local),
-      platformChannelSpecifics,
+      id: 0,
+      title: title,
+      body: body,
+      scheduledDate: tz.TZDateTime.from(scheduledNotificationDateTime, tz.local),
+      notificationDetails: platformChannelSpecifics,
       // Use exactAllowWhileIdle to ensure notifications fire on time even
       // when the device is in Doze mode.
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
